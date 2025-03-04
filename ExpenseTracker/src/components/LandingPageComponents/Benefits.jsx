@@ -3,8 +3,6 @@ import BenefitsCard from './BenefitsCard'
 
 const Benefits = () => {
 
-  console.log(BenefitsData)
-
   const renderData = BenefitsData.map((data,index) => {
     return(
       <BenefitsCard 
@@ -16,7 +14,7 @@ const Benefits = () => {
   })
 
   return(
-    <section className="w-full h-100 mt-10 flex justify-center">
+    <section className="w-full h-auto mt-10 flex justify-center">
       <div className="listOfBenefits">
         {renderData}
       </div>
