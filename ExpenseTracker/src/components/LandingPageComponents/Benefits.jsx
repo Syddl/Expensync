@@ -1,4 +1,3 @@
-import img from '../../assets/info1.svg'
 import { BenefitsData } from './BenefitsData'
 import BenefitsCard from './BenefitsCard'
 
@@ -6,10 +5,11 @@ const Benefits = () => {
 
   console.log(BenefitsData)
 
-  const renderData = BenefitsData.map((data) => {
+  const renderData = BenefitsData.map((data,index) => {
     return(
       <BenefitsCard 
-      key="data.id"
+      order={index}
+      key={data.id}
       {...data}
     />
     )
