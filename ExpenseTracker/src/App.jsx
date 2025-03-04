@@ -1,11 +1,9 @@
-import './App.css'
+import LandingPage from './Pages/LandingPage'
 
 function App() {
 
   return (
-    <>
-      <h1 className='text-4xl font-bold'>hi</h1>
-    </>
+    <LandingPage />
   )
 }
 
