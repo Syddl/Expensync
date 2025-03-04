@@ -1,8 +1,8 @@
 
 const BenefitsCard = (props) => {
   return(
-    <div className="container flex items-center justify-between w-full h-[552px] bg-[#f4edff] mx-5 my-10 rounded-[48px] py-5 px-25">
-      <img src={props.img.src} alt={props.img.alt} />
+    <div className="container flex items-center justify-between w-300 h-100 bg-[#f4edff] my-10 rounded-[48px] py-5 px-25">
+      <img src={props.img.src} alt={props.img.alt} className="w-90 h-90"/>
       <div className="details w-[600px] ">
         <h1 className="text-[#00093c] text-5xl font-bold font-[Montserrat] mb-5">{props.title}</h1>
         <p className="text-[#00093c] font-[Montserrat] text-2xl mb-5">{props.text}</p>
