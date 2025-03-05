@@ -9,12 +9,12 @@ const LandingPage = () => {
   return(
     <>
       <LandingHeader />
-      <main className="w-100% h-auto">
+      <main className="2xl:w-full xl:w-full lg:w-full md:w-full sm:w-full w-full h-auto">
         <LandingHome />
-        <Benefits />
-        <StartNow />
+        {/* <Benefits />
+        <StartNow /> */}
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </>
     
   )
