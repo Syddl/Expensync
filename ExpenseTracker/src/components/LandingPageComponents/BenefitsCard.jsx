@@ -1,15 +1,8 @@
 
 const BenefitsCard = (props) => {
 
-  let order1, order2;
-
-  if(props.order % 2 == 0){
-    order1 = 1;
-    order2 = 2;
-  }else{
-    order1 = 2;
-    order2 = 1
-  }
+  const order1 = props.order % 2 === 0 ? "1" : "2";
+  const order2 = props.order % 2 === 0 ? "2" : "1";
 
   return(
     <div className="container flex items-center justify-between w-300 h-100 bg-[#f4edff] my-10 rounded-[48px] py-5 px-25">
