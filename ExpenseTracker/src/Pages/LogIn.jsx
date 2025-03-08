@@ -22,7 +22,9 @@ const LogIn = () => {
               <p className='text-violet-800 mb-5'>Forgot passowrd</p>
             </Link>
           </div>
-          <button className='w-85 h-10 rounded-3xl  bg-violet-600 text-white font-bold mb-5'>Log in</button>
+          <Link to="/Dashboard">
+            <button className='w-85 h-10 rounded-3xl  bg-violet-600 text-white font-bold mb-5'>Log in</button>
+          </Link>
           <p className='text-md'>Don't have an account?
             <Link to="/Signup">
               <span className='text-[#7f5efd] cursor-pointer'> Sign up</span>
