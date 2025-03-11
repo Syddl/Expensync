@@ -23,7 +23,7 @@ const LogIn = () => {
             </Link>
           </div>
           <Link to="/Dashboard">
-            <button className='w-85 h-10 rounded-3xl  bg-violet-600 text-white font-bold mb-5'>Log in</button>
+            <button className='cursor-pointer w-85 h-10 rounded-3xl  bg-violet-600 text-white font-bold mb-5'>Log in</button>
           </Link>
           <p className='text-md'>Don't have an account?
             <Link to="/Signup">

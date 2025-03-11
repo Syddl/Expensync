@@ -1,15 +1,13 @@
 import SideBar from "../components/DashBoardComponents/SideBar"
+import Content from "../components/DashBoardComponents/Content"
+
 
 const Dashboard = () => {
   return(
-    <main className="h-screen w-screen flex">
-      <aside className="bg-[#F8F9FA] h-screen w-100">
-        <SideBar />
-      </aside>
-      <div className="content bg-[#E9ECEF] h-screen w-screen">
-
-      </div>
-    </main>
+    <div className="h-screen w-screen flex">
+      <SideBar/>
+      <Content />
+    </div>   
   )
 }
 
