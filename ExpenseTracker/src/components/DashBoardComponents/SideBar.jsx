@@ -14,9 +14,9 @@ const SideBar = () => {
       <nav className='h-175'>
         <ul>
           <NavLink to="/Dashboard" className='text-[#00093c] cursor-pointer hover:bg-[#E9ECEF] active:bg-[#E9ECEF] h-13 flex items-center font-medium pl-5'>Home</NavLink>
-          <NavLink to="/Dashboard/Transactions" className='text-[#00093c] cursor-pointer hover:bg-[#E9ECEF] active:bg-[#E9ECEF] h-13 flex items-center font-medium pl-5'>Transactions</NavLink>
-          <NavLink to="/Dashboard/Income" className='text-[#00093c] cursor-pointer hover:bg-[#E9ECEF] active:bg-[#E9ECEF] h-13 flex items-center font-medium pl-5'>Income</NavLink>
           <NavLink to="/Dashboard/Expenses" className='text-[#00093c] cursor-pointer hover:bg-[#E9ECEF] active:bg-[#E9ECEF] h-13 flex items-center font-medium pl-5'>Expenses</NavLink>
+          <NavLink to="/Dashboard/Data" className='text-[#00093c] cursor-pointer hover:bg-[#E9ECEF] active:bg-[#E9ECEF] h-13 flex items-center font-medium pl-5'>Expenses Data</NavLink>
+          <NavLink to="/Dashboard/Income" className='text-[#00093c] cursor-pointer hover:bg-[#E9ECEF] active:bg-[#E9ECEF] h-13 flex items-center font-medium pl-5'>Income</NavLink>
           <NavLink to="/Dashboard/Budgets" className='text-[#00093c] cursor-pointer hover:bg-[#E9ECEF] active:bg-[#E9ECEF] h-13 flex items-center font-medium pl-5'>Budgets</NavLink>
         </ul>
       </nav>
