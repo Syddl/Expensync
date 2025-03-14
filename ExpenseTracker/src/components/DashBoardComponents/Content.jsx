@@ -3,7 +3,7 @@ import Home from '../../Pages/Home'
 import Expenses from '../../Pages/Expenses'
 import Data from '../../Pages/Data'
 import Income from '../../Pages/Income'
-import Budgets from '../../Pages/Budgets'
+import Bills from '../../Pages/Bills'
 
 const Content = () => {
   return(
@@ -13,7 +13,7 @@ const Content = () => {
         <Route path="/Data" element={<Data />}/>
         <Route path="/Income" element={<Income />}/>
         <Route path="/Expenses" element={<Expenses />}/>
-        <Route path="/Budgets" element={<Budgets />}/>
+        <Route path="/Bills" element={<Bills />}/>
       </Routes>
     </main>
   )
