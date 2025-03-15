@@ -10,7 +10,7 @@ export default function ChartsOverview() {
         { data: [15, 25, 30, 50] },
         { data: [60, 50, 15, 25] },
       ]}
-      height={310}
+      height={450}
       xAxis={[{ data: ['December', 'January', 'February', 'March'], scaleType: 'band' }]}
       margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
       
