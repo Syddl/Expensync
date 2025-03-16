@@ -1,4 +1,5 @@
 import { ExpensesList } from '../components/DashBoardComponents/Home/ExpensesList'
+import { ExpensesModal } from '../components/DashBoardComponents/Modal'
 import AmountCard from '../components/DashBoardComponents/AmountCard'
 
 const Expenses = () => {
@@ -6,7 +7,7 @@ const Expenses = () => {
     <div className="flex justify-center bg-white flex-col">
       <header className='flex justify-between items-center h-20  pt-5 mx-10'>
         <h1 className='text-[#00093c] font-[Montserrat] font-bold text-3xl'>Expenses</h1>
-        <button className='bg-[#7f5efd] p-3 rounded-3xl font-[Montserrat] text-white font-bold text-sm'>Upload Expenses</button>
+        <ExpensesModal />
       </header>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
         <AmountCard  type="Expenses this week" amount="₱752.00"/>

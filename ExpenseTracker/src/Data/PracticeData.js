@@ -10,3 +10,10 @@ export const ExpenseData = [
   { name: "Rent", dueDate: "10/13/2072", amount: "₱5,499.00" },
   { name: "Car", dueDate: "12/11/2012", amount: "₱15,499.00" },
 ]
+
+
+export const IncomeData = [
+  { name: "Electricity", dueDate: "02/12/2022", amount: "₱2,499.00" },
+  { name: "Rent", dueDate: "10/13/2072", amount: "₱5,499.00" },
+  { name: "Car", dueDate: "12/11/2012", amount: "₱15,499.00" },
+]

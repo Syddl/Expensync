@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BillsData } from '../../../Data/PracticeData';
 
-const BillsList = () => {
+export const BillsList = () => {
 
   const [bills, setBills] = useState(BillsData);
 
@@ -25,4 +25,34 @@ const BillsList = () => {
   )
 }
 
-export default BillsList
+//no limit 
+
+export const BillsListNoLimit = () => {
+  const [bills, setBills] = useState(BillsData);
+
+  const renderExpense = bills.map((data, index) => {
+    return(
+      <li key={index} className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200">
+        <p>{data.billType}</p>
+        <p>{data.billType}</p> 
+        <p>{data.dueDate}</p> 
+        <p>{data.amount}</p> 
+      </li>
+    )
+  })
+
+  return(
+
+    <>
+      <div className="bg-[#7f5efd] relative rounded-lg text-white border-5 border-solid border-white h-15 w-[100%] flex justify-between items-center px-10">
+        <h1 className="text-sm font-semibold font-[Montserrat]">Name</h1>
+        <h1 className="text-sm font-semibold font-[Montserrat]">Type</h1>
+        <h1 className="text-sm font-semibold font-[Montserrat]">Date</h1>
+        <h1 className="text-sm font-semibold font-[Montserrat]">Amount</h1>
+      </div>
+      {renderExpense}
+    </>
+
+  )
+}
+

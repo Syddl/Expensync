@@ -1,16 +1,15 @@
 import { Link } from 'react-router-dom'
 import ChartsOverview from "../components/DashBoardComponents/Home/ChartsOverview"
-import BillsList from "../components/DashBoardComponents/Home/BillsList"
+import { BillsList } from "../components/DashBoardComponents/Home/BillsList"
 import { ExpensesListDashboard } from "../components/DashBoardComponents/Home/ExpensesList"
 import AmountCard from '../components/DashBoardComponents/AmountCard'
+import Header from "../components/DashBoardComponents/Header"
 
 const  Home = () => {
   return(
     <>
-      <header className=" w-vw h-25 pt-5">
-        <h1 className="text-3xl font-bold font-sans pt-5 pl-10 text-[#00093c]">Accounting Dashboard</h1>
-      </header>
-     <main className=" h-auto w-100% pl-10 pr-10 ">
+      <Header title="Dashboard"/>
+     <main className=" h-auto w-100% pl-10 pr-10 pt-5">
         <div className="upperContent flex gap-5">
           <AmountCard type="Expenses" amount="₱5,534.00"/>
           <AmountCard type="Income" amount="₱7,534.00"/>
