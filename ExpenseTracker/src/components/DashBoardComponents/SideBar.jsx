@@ -1,6 +1,7 @@
 import Logo from '../../assets/Logo-only.svg'
 import PFP from '../../assets/pfp.jpg'
 import { NavLink } from 'react-router-dom'
+import { ProfileModal } from './Modal'
 
 
 const SideBar = () => {
@@ -25,7 +26,7 @@ const SideBar = () => {
       <div className="profile bg-[#E9ECEF] h-22 rounded-2xl flex items-center gap-3 pl-5 pr-5">
         <img src={PFP} alt="" className='h-15 w-15 rounded-[50%] '/>
         <h1 className='font-medium text-xl text-[#00093c]'>Justine</h1>
-        <button className='bg-white hover:text-white hover:bg-[#7f5efd] cursor-pointer w-10 h-10 rounded-3xl font-bold text-xl pb-5 ml-16'>...</button>
+        <ProfileModal />
       </div>
     </main>
     </aside>

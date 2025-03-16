@@ -1,4 +1,4 @@
-import { ExpensesModal } from '../components/DashBoardComponents/Modal'
+import { BillsModal } from '../components/DashBoardComponents/Modal'
 import AmountCard from '../components/DashBoardComponents/AmountCard'
 import { BillsListNoLimit } from "../components/DashBoardComponents/Home/BillsList"
 
@@ -7,7 +7,7 @@ const Bills = () => {
     <>
       <header className='flex justify-between items-center h-20  pt-5 mx-10'>
          <h1 className='text-[#00093c] font-[Montserrat] font-bold text-3xl'>Bills</h1>
-        <ExpensesModal />
+        <BillsModal />
       </header>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
         <AmountCard type="Bills this month" amount="₱752.00"/>
