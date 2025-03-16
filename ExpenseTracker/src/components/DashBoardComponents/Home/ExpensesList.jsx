@@ -3,37 +3,31 @@ import { ExpenseData } from '../../../Data/PracticeData'
 
 
 
-
-
 // no limit render
-export const ExpensesList = () => {
-  const [expense, setExpense] = useState(ExpenseData)
+export const ExpensesList = ({ data }) => {
+  if (!data || data.length === 0) {
+    return null;
+  }
 
-  const renderExpense = expense.map((data, index) => {
-    return(
-      <li key={index} className='mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200 '>
-        <p>{data.name}</p>
-        <p>{data.name}</p> 
-        <p>{data.dueDate}</p> 
-        <p>{data.amount}</p> 
-      </li>
-    )
-  })
-
-  return(
-
+  return (
     <>
-      <div className="bg-[#7f5efd] relative rounded-lg text-white border-5 border-solid border-white h-15 w-[100%] flex justify-between items-center px-10">
-        <h1 className="text-sm font-semibold font-[Montserrat]">Name</h1>
-        <h1 className="text-sm font-semibold font-[Montserrat]">Type</h1>
-        <h1 className="text-sm font-semibold font-[Montserrat]">Date</h1>
-        <h1 className="text-sm font-semibold font-[Montserrat]">Amount</h1>
-      </div>
-      {renderExpense}
+        <ul>
+          {data.map((item, index) => (
+            <li
+              key={index}
+              className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200"
+            >
+              <p>{item.name}</p>
+              <p>{item.type}</p>
+              <p>{item.date}</p>
+              <p>₱{item.amount}</p>
+            </li>
+          ))}
+        </ul>
     </>
+  );
+};
 
-  )
-}
 
 //has limit to 3
 export const ExpensesListDashboard = () => {
