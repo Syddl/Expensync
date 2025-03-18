@@ -3,7 +3,7 @@ import { ExpensesList } from '../components/DashBoardComponents/Home/ExpensesLis
 import AmountCard from '../components/DashBoardComponents/AmountCard';
 
 const Expenses = () => {
-  const [expense, setExpenses] = useState([]); // Start with an empty array
+  const [expense, setExpenses] = useState([]);
 
   const addExpenses = (formData) => {
     const itemName = formData.get("itemName");
@@ -39,6 +39,7 @@ const Expenses = () => {
               name="itemName"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
               required
+              placeholder='e.g New Phone'
             />
           </div>
           <div>
@@ -72,9 +73,10 @@ const Expenses = () => {
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
               step="0.01"
               required
+              placeholder='₱20,000.00'
             />
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit" className='bg-[#7f5efd] h-10 w-25 text-white font-semibold rounded-lg cursor-pointer '>Submit</button>
         </form>
         <div className="bg-[#7f5efd] relative rounded-lg text-white border-5 border-solid border-white h-15 w-[100%] flex justify-between items-center px-10">
           <h1 className="text-sm font-semibold font-[Montserrat]">Name</h1>
@@ -82,7 +84,7 @@ const Expenses = () => {
           <h1 className="text-sm font-semibold font-[Montserrat]">Date</h1>
           <h1 className="text-sm font-semibold font-[Montserrat]">Amount</h1>
         </div>
-        {expense.length > 0 && <ExpensesList data={expense} />}
+        {expense.length ? <ExpensesList data={expense}/> : ""}
       </main>
     </div>
   )

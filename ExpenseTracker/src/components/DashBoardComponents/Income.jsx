@@ -1,16 +1,12 @@
-import { useState } from "react"
-import { IncomeData } from '../../Data/PracticeData'
 
-export const IncomeList = () => {
+export const IncomeList = ({ state }) => {
 
-  const [income, setIncome] = useState(IncomeData )
-
-  const renderIncome = income.map((data, index) => {
+  const renderIncome = state.map((data, index) => {
     return(
       <li key={index} className='mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200 '>
-        <p>{data.name}</p>
-        <p>{data.name}</p> 
-        <p>{data.dueDate}</p> 
+        <p>{data.sourceIncome}</p>
+        <p>{data.type}</p> 
+        <p>{data.date}</p> 
         <p>{data.amount}</p> 
       </li>
     )
