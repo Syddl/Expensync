@@ -4,19 +4,62 @@ import { BillsList } from "../components/DashBoardComponents/Home/BillsList"
 import { ExpensesListDashboard } from "../components/DashBoardComponents/Home/ExpensesList"
 import AmountCard from '../components/DashBoardComponents/AmountCard'
 import Header from "../components/DashBoardComponents/Header"
+import { useState, useEffect } from 'react'
+import { collection, onSnapshot } from "firebase/firestore";
+import { db, auth } from "../firebase";
 
 const  Home = () => {
+  const [expenses, setExpenses] = useState(0);
+  const [balanceCard, setBalanceCard] = useState(0);
+  const [income, setIncome] = useState(0);
+
+  //update the card
+    useEffect(() => {
+      const user = auth.currentUser;
+      if (!user) return;  
+  
+      const userId = user.uid;
+      const expensesRef = collection(db, "users", userId, "expenses");
+  
+      const unsubscribe = onSnapshot(expensesRef, (snapshot) => {
+        const expensesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+  
+        // Get the current date
+        const today = new Date();
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // Start of the month
+
+        let monthlyTotal = 0;
+  
+        expensesData.forEach((expense) => {
+          const expenseDate = new Date(expense.date);
+  
+          if (expenseDate >= startOfMonth) {
+            monthlyTotal += expense.amount;
+          }
+        });
+  
+        setExpenses(monthlyTotal);
+        setBalanceCard(income - monthlyTotal); // Income vs Expenses
+      });
+  
+      return () => unsubscribe();
+    }, [income]);
+  
+
   return(
     <>
       <Header title="Dashboard"/>
      <main className=" h-auto w-100% pl-10 pr-10 pt-5">
         <div className="upperContent flex gap-5">
-          <AmountCard type="Expenses" amount="₱5,534.00"/>
-          <AmountCard type="Income" amount="₱7,534.00"/>
-          <AmountCard type="Expenses" amount="₱5,534.00"/>
+          <AmountCard type="Expenses" amount={expenses}/>
+          <AmountCard type="Income" amount={income}/>
+          <AmountCard type="Expenses vs Income" amount={balanceCard}/>
         </div>
         <div className="mainContent flex gap-5 mt-5">
-          <div className="container bg-[#f1f1f1] h-100 rounded-xl flex flex-col items-center">
+          <div className="container bg-[#f1f1f1] h-100 rounded-xl flex flex-col items-center py-5">
             <ChartsOverview />
           </div>
           <div className="container bg-[#f1f1f1] w-185 h-100 rounded-xl p-5">

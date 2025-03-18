@@ -1,17 +1,16 @@
 import { useState } from 'react'
-import { BillsData } from '../../../Data/PracticeData';
 
 export const BillsList = () => {
 
-  const [bills, setBills] = useState(BillsData);
+  // const [bills, setBills] = useState();
 
-  const renderBill = bills.map((bill, index) => (
-    <li key={index} className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-10 ml-[1%] w-[98%] px-5 bg-gray-200">
-      <p className="text-sm font-semibold font-[Montserrat]">{bill.billType}</p>
-      <p className="text-sm font-semibold font-[Montserrat]">{bill.dueDate}</p>
-      <p className="text-sm font-semibold font-[Montserrat]">{bill.amount}</p>
-    </li>
-  ));
+  // const renderBill = bills.map((bill, index) => (
+  //   <li key={index} className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-10 ml-[1%] w-[98%] px-5 bg-gray-200">
+  //     <p className="text-sm font-semibold font-[Montserrat]">{bill.billType}</p>
+  //     <p className="text-sm font-semibold font-[Montserrat]">{bill.dueDate}</p>
+  //     <p className="text-sm font-semibold font-[Montserrat]">{bill.amount}</p>
+  //   </li>
+  // ));
 
   return(
     <>
@@ -20,7 +19,7 @@ export const BillsList = () => {
         <h1 className="text-sm font-semibold font-[Montserrat]">Due Data</h1>
         <h1 className="text-sm font-semibold font-[Montserrat]">Amount</h1>
       </div>
-      {renderBill}
+      {/*{renderBill} */}
     </>
   )
 }

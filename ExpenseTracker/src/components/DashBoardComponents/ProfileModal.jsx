@@ -2,6 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Hero from '../../assets/pfp.jpg'
+import { signOut } from "firebase/auth"
+import { auth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: 'absolute',
@@ -19,6 +22,18 @@ export default function ProfileModal() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
+
+  const logOutAccount = async () => {
+    try {
+      await signOut(auth);
+      navigate("/")
+    } catch (error) {
+      console.error("Error logging out:", error.message);
+      alert(error.message);
+    }
+  };
+
 
   return (
     <div>
@@ -39,7 +54,6 @@ export default function ProfileModal() {
                 <img src={Hero} alt="pfp" className='w-30 h-30 rounded-[100%]' />
                 <div> 
                   <h1 className='font-[Montserrat] font-bold text-2xl'>Justine Jude Cuevas</h1>
-                  <p className='font-[Montserrat] font-light mt-1'>Student</p>
                 </div>
               </div>
               <div>
@@ -48,7 +62,7 @@ export default function ProfileModal() {
                 <h1 className='font-medium text-lg text-[Montserrat]'>Password:</h1>
               </div>
             </main>
-            <button className='bg-[#7f5efd] rounded-lg w-30 h-12 text-white font-semibold font-[Montserrat]'>Log out</button>
+            <button onClick={logOutAccount} className='bg-[#7f5efd] cursor-pointer rounded-lg w-30 h-12 text-white font-semibold font-[Montserrat]'>Log out</button>
           </div>
         </Box>
       </Modal>

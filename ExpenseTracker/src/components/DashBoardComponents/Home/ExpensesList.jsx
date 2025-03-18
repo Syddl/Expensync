@@ -1,51 +1,104 @@
-import { useState } from 'react'
-import { ExpenseData } from '../../../Data/PracticeData'
-
-
+import fetchExpenses from "../../../hooks/fetchExpenses"
+import { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { auth, db } from "../../../firebase";
 
 // no limit render
-export const ExpensesList = ({ data }) => {
-  if (!data || data.length === 0) {
-    return null;
+export const ExpensesList = () => {
+  const [expenseList, setExpenseList] = useState([]);
+  const [loading, setLoading] = useState(true); // Show loading before data loads
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("No user logged in");
+      setLoading(false);
+      return;
+    }
+
+    const userId = user.uid;
+    const expensesRef = collection(db, "users", userId, "expenses");
+
+    // Firestore Listener for Real-Time Updates
+    const unsubscribe = onSnapshot(expensesRef, (snapshot) => {
+      const expensesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setExpenseList(expensesData);
+      setLoading(false);
+    });
+
+    // Cleanup the listener on component unmount
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <p>Loading expenses...</p>;
+  }
+
+  if (expenseList.length === 0) {
+    return (
+      <div className="flex justify-center">
+        <p>No expenses yet.</p>
+      </div>
+    );
   }
 
   return (
-    <>
-        <ul>
-          {data.map((item, index) => (
-            <li
-              key={index}
-              className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200"
-            >
-              <p>{item.name}</p>
-              <p>{item.type}</p>
-              <p>{item.date}</p>
-              <p>₱{item.amount}</p>
-            </li>
-          ))}
-        </ul>
-    </>
+    <ul>
+      {expenseList.map((item) => (
+        <li
+          key={item.id}
+          className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200"
+        >
+          <p>{item.name}</p>
+          <p>{item.type}</p>
+          <p>{new Date(item.date).toLocaleDateString()}</p>
+          <p>₱{item.amount}</p>
+        </li>
+      ))}
+    </ul>
   );
 };
 
 
 //has limit to 3
+
 export const ExpensesListDashboard = () => {
-  const [expense, setExpense] = useState(ExpenseData)
+  const [expenseList, setExpenseList] = useState([]);
+  const [loading, setLoading] = useState(true); // Show loading before data loads
 
-  const renderExpense = expense.slice(0, 3).map((data, index) => {
-    return(
-      <li key={index} className='mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-10 ml-1.5 w-[99.3%] px-5 bg-gray-200'>
-        <p>{data.name}</p>
-        <p>{data.name}</p> 
-        <p>{data.dueDate}</p> 
-        <p>{data.amount}</p> 
-      </li>
-    )
-  })
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("No user logged in");
+      setLoading(false);
+      return;
+    }
 
-  return(
+    const userId = user.uid;
+    const expensesRef = collection(db, "users", userId, "expenses");
 
+    // Firestore Listener for Real-Time Updates
+    const unsubscribe = onSnapshot(expensesRef, (snapshot) => {
+      const expensesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setExpenseList(expensesData);
+      setLoading(false);
+    });
+
+    // Cleanup the listener on component unmount
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <p>Loading expenses...</p>;
+  }
+
+  return (
     <>
       <div className="bg-[#7f5efd] rounded-lg text-white border-5 border-solid border-white h-10 w-[100%] flex justify-between items-center px-10">
         <h1 className="text-sm font-semibold font-[Montserrat]">Name</h1>
@@ -53,8 +106,20 @@ export const ExpensesListDashboard = () => {
         <h1 className="text-sm font-semibold font-[Montserrat]">Date</h1>
         <h1 className="text-sm font-semibold font-[Montserrat]">Amount</h1>
       </div>
-      {renderExpense}
+      <ul>
+      {expenseList.slice(0, 3).map((item) => (
+        <li
+          key={item.id}
+          className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-10 ml-1.5 w-[99.3%] px-5 bg-gray-200"
+        >
+          <p>{item.name}</p>
+          <p>{item.type}</p>
+          <p>{new Date(item.date).toLocaleDateString()}</p>
+          <p>₱{item.amount}</p>
+        </li>
+      ))}
+    </ul>
     </>
-
-  )
-}
+    
+  );
+};

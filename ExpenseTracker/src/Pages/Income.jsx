@@ -3,6 +3,7 @@ import AmountCard from '../components/DashBoardComponents/AmountCard'
 import { IncomeList } from "../components/DashBoardComponents/Income"
 
 const Income = () => {
+  
 
   const [income, setIncome] = useState([]);
 
@@ -40,6 +41,7 @@ const Income = () => {
               name="source"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
               required
+              placeholder='e.g Video Editing'
             />
           </div>
           <div>
@@ -49,6 +51,7 @@ const Income = () => {
               name="type"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
               required
+              placeholder='e.g Side hustle'
             />
           </div>
           <div>
@@ -68,6 +71,7 @@ const Income = () => {
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
               step="0.01"
               required
+              placeholder='₱10,000.00'
             />
           </div>
           <button type="submit" className='bg-[#7f5efd] h-10 w-25 text-white font-semibold rounded-lg cursor-pointer '>Submit</button>

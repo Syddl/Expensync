@@ -5,6 +5,9 @@ import { BillsListNoLimit } from "../components/DashBoardComponents/Home/BillsLi
 const Bills = () => {
 
   const [bills, setBills] = useState([]);
+  const [billsCard, setBillsCard] = useState(0)
+  const [spendingCard, setSpendingCard] = useState(0)
+  const [incomeCard, setIncomeCard] = useState(0)
 
   const addExpenses = (formData) => {
     const billName = formData.get("itemName");
@@ -27,19 +30,20 @@ const Bills = () => {
          <h1 className='text-[#00093c] font-[Montserrat] font-bold text-3xl'>Bills</h1>
       </header>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
-        <AmountCard type="Bills this month" amount="₱752.00"/>
-        <AmountCard type="Speding this month" amount="₱5752.00"/>
-        <AmountCard type="Income" amount="₱53752.00"/>
+        <AmountCard type="Bills this month" amount={billsCard}/>
+        <AmountCard type="Spending this month" amount={spendingCard}/>
+        <AmountCard type="Income" amount={incomeCard}/>
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll">
       <form action={handleSubmit} className="h-10 flex justify-around pb-13">
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Item Name</label>
+            <label className="font-[Montserrat] font-semibold text-md mr-5">Name</label>
             <input
               type="text"
               name="itemName"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
               required
+              placeholder='e.g WiFi'
             />
           </div>
           <div>
@@ -49,6 +53,7 @@ const Bills = () => {
               name="type"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
               required
+              placeholder='e.g WiFi'
             />
           </div>
           <div>
