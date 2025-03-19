@@ -12,8 +12,10 @@ const  Home = () => {
   const [expenses, setExpenses] = useState(0);
   const [balanceCard, setBalanceCard] = useState(0);
   const [income, setIncome] = useState(0);
+  const [bills, setBills] = useState(0)
+  const [totalExpenses, setTotalExpenses] = useState(0)
 
-  //update the card
+  //Fetch Expenses
     useEffect(() => {
       const user = auth.currentUser;
       if (!user) return;  
@@ -42,19 +44,57 @@ const  Home = () => {
         });
   
         setExpenses(monthlyTotal);
-        setBalanceCard(income - monthlyTotal); // Income vs Expenses
       });
   
       return () => unsubscribe();
-    }, [income]);
+    }, []);
   
+
+    //Fetch Bills
+    useEffect(() => {
+      const user = auth.currentUser;
+      if (!user) return;
+    
+      const userId = user.uid;
+      const billsRef = collection(db, "users", userId, "bills");
+    
+      const unsubscribe = onSnapshot(billsRef, (snapshot) => {
+        const billsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+    
+        const today = new Date();
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+        let monthlyBillsTotal = 0;
+    
+        billsData.forEach((bill) => {
+          const billDate = new Date(bill.dueDate);
+    
+          if (billDate >= startOfMonth) {
+            monthlyBillsTotal += Number(bill.amount);
+          }
+        });
+    
+        setBills(monthlyBillsTotal);
+      });
+    
+      return () => unsubscribe();
+    }, []); 
+
+    //adding value to expenses
+    useEffect(() => {
+      setTotalExpenses(bills + expenses);
+      setBalanceCard(income - totalExpenses)
+    }, [bills, expenses, income, totalExpenses]);
 
   return(
     <>
       <Header title="Dashboard"/>
      <main className=" h-auto w-100% pl-10 pr-10 pt-5">
         <div className="upperContent flex gap-5">
-          <AmountCard type="Expenses" amount={expenses}/>
+          <AmountCard type="Total Expenses" amount={totalExpenses}/>
           <AmountCard type="Income" amount={income}/>
           <AmountCard type="Expenses vs Income" amount={balanceCard}/>
         </div>

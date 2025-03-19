@@ -2,10 +2,11 @@ import * as React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { auth, db } from "../../../firebase"; // Make sure your Firebase is correctly configured
+import { auth, db } from "../../../firebase"; 
 
 export default function ChartsOverview() {
   const [chartData, setChartData] = useState([]);
+  const [monthLabels, setMonthLabels] = useState([]);
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -13,47 +14,66 @@ export default function ChartsOverview() {
 
     const userId = user.uid;
     const expensesRef = collection(db, "users", userId, "expenses");
+    const billsRef = collection(db, "users", userId, "bills");
 
-    const unsubscribe = onSnapshot(expensesRef, (snapshot) => {
-      const expensesData = snapshot.docs.map((doc) => ({
+    const unsubscribeExpenses = onSnapshot(expensesRef, (expensesSnapshot) => {
+      const expensesData = expensesSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
+        amount: Number(doc.data().amount),
+        date: new Date(doc.data().date),
       }));
 
-      // Get the last 4 months
-      const today = new Date();
-      const last4Months = [];
-      for (let i = 0; i < 4; i++) {
-        const monthDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
-        last4Months.push(monthDate);
-      }
+      const unsubscribeBills = onSnapshot(billsRef, (billsSnapshot) => {
+        const billsData = billsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          amount: Number(doc.data().amount),
+          date: new Date(doc.data().dueDate),
+        }));
 
-      // Group expenses by month and week
-      const groupedExpenses = last4Months.map((monthDate) => {
-        const monthExpenses = expensesData.filter((expense) => {
-          const expenseDate = new Date(expense.date);
-          return (
-            expenseDate.getFullYear() === monthDate.getFullYear() &&
-            expenseDate.getMonth() === monthDate.getMonth()
-          );
+        // Merge expenses and bills
+        const allExpenses = [...expensesData, ...billsData];
+
+        // Get the last 4 months dynamically
+        const today = new Date();
+        const last4Months = [];
+        const monthNames = [];
+
+        for (let i = 3; i >= 0; i--) {
+          const monthDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
+          last4Months.push(monthDate);
+          monthNames.push(monthDate.toLocaleString("default", { month: "long" })); // Get month name
+        }
+
+        setMonthLabels(monthNames); // Update month labels dynamically
+
+        // Group expenses by month and week
+        const groupedData = last4Months.map((monthDate) => {
+          const monthlyExpenses = allExpenses.filter((expense) => {
+            return (
+              expense.date.getFullYear() === monthDate.getFullYear() &&
+              expense.date.getMonth() === monthDate.getMonth()
+            );
+          });
+
+          // Initialize weekly sums
+          const weeklyTotals = [0, 0, 0, 0];
+
+          // Split into 4 weeks
+          monthlyExpenses.forEach((expense) => {
+            const weekNumber = Math.floor((expense.date.getDate() - 1) / 7);
+            weeklyTotals[weekNumber] += expense.amount;
+          });
+
+          return weeklyTotals;
         });
 
-        // Split expenses into 4 weeks
-        const weeklyExpenses = [0, 0, 0, 0]; // 4 weeks
-
-        monthExpenses.forEach((expense) => {
-          const expenseDate = new Date(expense.date);
-          const weekNumber = Math.floor((expenseDate.getDate() - 1) / 7); // Week 0-3
-          weeklyExpenses[weekNumber] += expense.amount;
-        });
-
-        return weeklyExpenses;
+        setChartData(groupedData);
       });
 
-      setChartData(groupedExpenses.reverse()); // Reverse to maintain order (Dec → Mar)
+      return () => unsubscribeBills();
     });
 
-    return () => unsubscribe();
+    return () => unsubscribeExpenses();
   }, []);
 
   return (
@@ -67,7 +87,7 @@ export default function ChartsOverview() {
       height={400}
       xAxis={[
         {
-          data: ["December", "January", "February", "March"],
+          data: monthLabels,
           scaleType: "band",
         },
       ]}

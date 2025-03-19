@@ -1,28 +1,113 @@
-import { useState } from 'react'
+                                                import { useState, useEffect } from 'react'
 import AmountCard from '../components/DashBoardComponents/AmountCard'
 import { BillsListNoLimit } from "../components/DashBoardComponents/Home/BillsList"
+import { db, auth } from "../firebase";
+import { collection, addDoc, serverTimestamp, onSnapshot } from "firebase/firestore";
 
 const Bills = () => {
 
-  const [bills, setBills] = useState([]);
-  const [billsCard, setBillsCard] = useState(0)
-  const [spendingCard, setSpendingCard] = useState(0)
-  const [incomeCard, setIncomeCard] = useState(0)
+  const [expenses, setExpenses] = useState(0);
+const [billsCard, setBillsCard] = useState(0);
+const [monthlySpending, setMonthlySpending] = useState(0);
+const [incomeCard, setIncomeCard] = useState(0);
 
-  const addExpenses = (formData) => {
-    const billName = formData.get("itemName");
-    const billType = formData.get("type");
-    const dueDate = formData.get("date");
-    const amount = formData.get("amount");
+const addBills = async (formData) => {
+  const user = auth.currentUser;
+  if (!user) {
+    alert("You need to be logged in to add expenses.");
+    return;
+  }
 
-    setBills((prevExpenses) => [
-      ...prevExpenses,
-      { name: billName, billType, dueDate, amount },
-    ]);
-  };
+  const billName = formData.get("itemName");
+  const billType = formData.get("type");
+  const dueDate = formData.get("date");
+  const amount = parseFloat(formData.get("amount"));
 
-  const handleSubmit = (formData) => 
-    addExpenses(formData);
+  try {
+    await addDoc(collection(db, "users", user.uid, "bills"), {
+      billName,
+      billType,
+      dueDate,
+      amount,
+      createdAt: serverTimestamp(),
+    });
+  } catch (e) {
+    console.log("error" + e);
+  }
+};
+
+// Fetch Bills
+useEffect(() => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const userId = user.uid;
+  const billsRef = collection(db, "users", userId, "bills");
+
+  const unsubscribe = onSnapshot(billsRef, (snapshot) => {
+    const billsData = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    let monthlyBillsTotal = 0;
+
+    billsData.forEach((bill) => {
+      const billDate = new Date(bill.dueDate);
+
+      if (billDate >= startOfMonth) {
+        monthlyBillsTotal += Number(bill.amount);
+      }
+    });
+
+    setBillsCard(monthlyBillsTotal);
+  });
+
+  return () => unsubscribe();
+}, []); 
+
+// Fetch Expenses
+useEffect(() => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const userId = user.uid;
+  const expensesRef = collection(db, "users", userId, "expenses");
+
+  const unsubscribe = onSnapshot(expensesRef, (snapshot) => {
+    const expensesData = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    let monthlyTotal = 0;
+
+    expensesData.forEach((expense) => {
+      const expenseDate = new Date(expense.date);
+
+      if (expenseDate >= startOfMonth) {
+        monthlyTotal += Number(expense.amount);
+      }
+    });
+
+    setExpenses(monthlyTotal);
+  });
+
+  return () => unsubscribe();
+}, []);
+
+
+useEffect(() => {
+  setMonthlySpending(billsCard + expenses);
+}, [billsCard, expenses]);
+
+
 
   return(
     <>
@@ -31,11 +116,11 @@ const Bills = () => {
       </header>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
         <AmountCard type="Bills this month" amount={billsCard}/>
-        <AmountCard type="Spending this month" amount={spendingCard}/>
+        <AmountCard type="Spending this month" amount={monthlySpending}/>
         <AmountCard type="Income" amount={incomeCard}/>
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll">
-      <form action={handleSubmit} className="h-10 flex justify-around pb-13">
+      <form action={addBills} className="h-10 flex justify-around pb-13">
           <div>
             <label className="font-[Montserrat] font-semibold text-md mr-5">Name</label>
             <input
@@ -83,7 +168,7 @@ const Bills = () => {
           <h1 className="text-sm font-semibold font-[Montserrat]">Date</h1>
           <h1 className="text-sm font-semibold font-[Montserrat]">Amount</h1>
         </div>
-        {bills.length ? <BillsListNoLimit bill={bills}/> : ""}
+        <BillsListNoLimit/>
       </main>
        
 

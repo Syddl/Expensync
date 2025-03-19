@@ -37,7 +37,7 @@ const Expenses = () => {
 
 
 
-  //update the card
+  //display data on card
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;

@@ -1,7 +1,7 @@
-import fetchExpenses from "../../../hooks/fetchExpenses"
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 // no limit render
 export const ExpensesList = () => {
@@ -9,28 +9,33 @@ export const ExpensesList = () => {
   const [loading, setLoading] = useState(true); // Show loading before data loads
 
   useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) {
-      console.error("No user logged in");
-      setLoading(false);
-      return;
-    }
-
-    const userId = user.uid;
-    const expensesRef = collection(db, "users", userId, "expenses");
-
-    // Firestore Listener for Real-Time Updates
-    const unsubscribe = onSnapshot(expensesRef, (snapshot) => {
-      const expensesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setExpenseList(expensesData);
-      setLoading(false);
+    // Listen for Firebase auth state
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        console.error("No user logged in");
+        setLoading(false);
+        return;
+      }
+  
+      const userId = user.uid;
+      const expensesRef = collection(db, "users", userId, "expenses");
+  
+      // Firestore Listener for Real-Time Updates
+      const unsubscribeFirestore = onSnapshot(expensesRef, (snapshot) => {
+        const expensesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setExpenseList(expensesData);
+        setLoading(false);
+      });
+  
+      // Cleanup the Firestore listener when user logs out
+      return () => unsubscribeFirestore();
     });
-
-    // Cleanup the listener on component unmount
-    return () => unsubscribe();
+  
+    // Cleanup the Auth listener when the component unmounts
+    return () => unsubscribeAuth();
   }, []);
 
   if (loading) {
@@ -70,28 +75,33 @@ export const ExpensesListDashboard = () => {
   const [loading, setLoading] = useState(true); // Show loading before data loads
 
   useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) {
-      console.error("No user logged in");
-      setLoading(false);
-      return;
-    }
-
-    const userId = user.uid;
-    const expensesRef = collection(db, "users", userId, "expenses");
-
-    // Firestore Listener for Real-Time Updates
-    const unsubscribe = onSnapshot(expensesRef, (snapshot) => {
-      const expensesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setExpenseList(expensesData);
-      setLoading(false);
+    // Listen for Firebase auth state
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        console.error("No user logged in");
+        setLoading(false);
+        return;
+      }
+  
+      const userId = user.uid;
+      const expensesRef = collection(db, "users", userId, "expenses");
+  
+      // Firestore Listener for Real-Time Updates
+      const unsubscribeFirestore = onSnapshot(expensesRef, (snapshot) => {
+        const expensesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setExpenseList(expensesData);
+        setLoading(false);
+      });
+  
+      // Cleanup the Firestore listener when user logs out
+      return () => unsubscribeFirestore();
     });
-
-    // Cleanup the listener on component unmount
-    return () => unsubscribe();
+  
+    // Cleanup the Auth listener when the component unmounts
+    return () => unsubscribeAuth();
   }, []);
 
   if (loading) {
