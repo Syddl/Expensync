@@ -107,7 +107,39 @@ useEffect(() => {
   setMonthlySpending(billsCard + expenses);
 }, [billsCard, expenses]);
 
+//fetch income
+useEffect(() => {
+  const user = auth.currentUser;
+  if(!user) return;
 
+  const userId = user.uid;
+  const incomeRef = collection(db, "users", userId, "income");
+
+  const unsubscribe = onSnapshot(incomeRef, (snapshot) => {
+    const incomeData = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+
+    const today = new Date();
+    const startMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    let monthIncomeTotal = 0;
+
+    incomeData.forEach((income) => {
+      const incomeDate = new Date(income.date);
+
+      if (incomeDate >= startMonth) {
+        monthIncomeTotal += Number(income.amount);
+      }
+    });
+
+
+    setIncomeCard(monthIncomeTotal)
+  })
+
+  return () => unsubscribe();
+}, [])
 
   return(
     <>

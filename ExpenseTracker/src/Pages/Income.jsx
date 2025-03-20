@@ -1,26 +1,155 @@
-import { useState } from 'react'
+import { useState, useEffect, use } from 'react'
 import AmountCard from '../components/DashBoardComponents/AmountCard'
 import { IncomeList } from "../components/DashBoardComponents/Income"
+import { db, auth } from '../firebase'
+import { collection, addDoc, serverTimestamp, onSnapshot } from 'firebase/firestore'
+
 
 const Income = () => {
-  
+  const [weekIncome, setWeekIncome] = useState(0)
+  const [monthIncome, setMonthIncome] = useState(0)
+  const [balance, setBalance] = useState(0)
+  const [expenses, setExpenses] = useState(0)
+  const [bills, setBills] = useState(0)
 
-  const [income, setIncome] = useState([]);
+  //push data to database
+  const addIncome = async (formData) => {
+    const user = auth.currentUser;
+    if(!user){
+      alert("You need to be logged in to add expenses.");
+      return;
+    }
 
-  const addExpenses = (formData) => {
-    const sourceIncome = formData.get("source");
-    const type = formData.get("type");
-    const date = formData.get("date");
-    const amount = formData.get("amount");
+    const source = formData.get("source")
+    const type = formData.get("type")
+    const date = formData.get("date")
+    const amount = formData.get("amount")
 
-    setIncome((prevExpenses) => [
-      ...prevExpenses,
-      { sourceIncome, type, date, amount },
-    ]);
+    try{
+      await addDoc(collection(db, "users", user.uid, "income"),{
+        source,
+        type,
+        date,
+        amount,
+        createAt: serverTimestamp()
+      })
+    }catch(e){
+      console.log("Income error:", e)
+    }
   };
 
-  const handleSubmit = (formData) => 
-    addExpenses(formData);
+  //fetch income data
+  useEffect(() => {
+    const user = auth.currentUser;
+    if(!user) return;
+
+    const userId = user.uid;
+    const incomeRef = collection(db, "users", userId, "income");
+
+    const unsubscribe = onSnapshot(incomeRef, (snapshot) => {
+      const incomeData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+
+      const today = new Date();
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay());
+      const startMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+      let weekIncomeTotal = 0;
+      let monthIncomeTotal = 0;
+
+      incomeData.forEach((income) => {
+        const incomeDate = new Date(income.date);
+
+        if (incomeDate >= startMonth) {
+          monthIncomeTotal += Number(income.amount);
+        }
+
+        if (incomeDate >= startOfWeek) {
+          weekIncomeTotal += Number(income.amount);
+        }
+      });
+
+      setWeekIncome(weekIncomeTotal)
+      setMonthIncome(monthIncomeTotal)
+    })
+
+    return () => unsubscribe();
+  }, [])
+
+  //fetch expense data
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const userId = user.uid;
+    const expensesRef = collection(db, "users", userId, "expenses");
+
+    const unsubscribe = onSnapshot(expensesRef, (snapshot) => {
+      const expensesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      // Get the current date
+      const today = new Date();
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // Start of the month
+
+      let monthlyTotal = 0;
+
+      expensesData.forEach((expense) => {
+        const expenseDate = new Date(expense.date);
+
+        if (expenseDate >= startOfMonth) {
+          monthlyTotal += expense.amount;
+        }
+      });
+
+      setExpenses(monthlyTotal);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  //fetch bills data
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return;
+  
+    const userId = user.uid;
+    const billsRef = collection(db, "users", userId, "bills");
+  
+    const unsubscribe = onSnapshot(billsRef, (snapshot) => {
+      const billsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+  
+      const today = new Date();
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  
+      let monthlyBillsTotal = 0;
+  
+      billsData.forEach((bill) => {
+        const billDate = new Date(bill.dueDate);
+  
+        if (billDate >= startOfMonth) {
+          monthlyBillsTotal += Number(bill.amount);
+        }
+      });
+  
+      setBills(monthlyBillsTotal);
+    });
+  
+    return () => unsubscribe();
+  }, []); 
+
+  //store data on balance state
+  useEffect(() => {
+    setBalance(monthIncome - (expenses + bills))
+  }, [monthIncome, expenses, bills])
 
   return(
     <>
@@ -28,12 +157,12 @@ const Income = () => {
         <h1 className='text-[#00093c] font-[Montserrat] font-bold text-3xl'>Income</h1>
       </header>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
-        <AmountCard type="Income this week" amount="₱752.00"/>
-        <AmountCard type="Income this month" amount="₱5752.00"/>
-        <AmountCard type="Income vs Expenses" amount="₱53752.00"/>
+        <AmountCard type="Income this week" amount={weekIncome}/>
+        <AmountCard type="Income this month" amount={monthIncome}/>
+        <AmountCard type="Income vs Expenses" amount={balance}/>
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll">
-      <form action={handleSubmit} className="h-10 flex justify-around pb-13">
+      <form action={addIncome} className="h-10 flex justify-around pb-13">
           <div>
             <label className="font-[Montserrat] font-semibold text-md mr-5">Source</label>
             <input
@@ -76,7 +205,7 @@ const Income = () => {
           </div>
           <button type="submit" className='bg-[#7f5efd] h-10 w-25 text-white font-semibold rounded-lg cursor-pointer '>Submit</button>
         </form>
-        <IncomeList state={income}/>  
+        <IncomeList/>  
       </main>
     </>
   )

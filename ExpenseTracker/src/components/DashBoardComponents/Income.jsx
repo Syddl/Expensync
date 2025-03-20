@@ -1,26 +1,68 @@
+import { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { auth, db } from "../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
-export const IncomeList = ({ state }) => {
+export const IncomeList = () => {
+  const [incomeList, setIncomeList] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const renderIncome = state.map((data, index) => {
-    return(
-      <li key={index} className='mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200 '>
-        <p>{data.sourceIncome}</p>
-        <p>{data.type}</p> 
-        <p>{data.date}</p> 
-        <p>{data.amount}</p> 
-      </li>
-    )
-  })
+  useEffect(() => {
+    // Listen for Firebase auth state
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        console.error("No user logged in");
+        setLoading(false);
+        return;
+      }
+  
+      const userId = user.uid;
+      const incomeRef = collection(db, "users", userId, "income");
+  
+      // Firestore Listener for Real-Time Updates
+      const unsubscribeFirestore = onSnapshot(incomeRef, (snapshot) => {
+        const incomeData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setIncomeList(incomeData);
+        setLoading(false);
+      });
+  
+      // Cleanup the Firestore listener when user logs out
+      return () => unsubscribeFirestore();
+    });
+  
+    // Cleanup the Auth listener when the component unmounts
+    return () => unsubscribeAuth();
+  }, []);
 
-  return(
-    <>
-      <div className="bg-[#7f5efd] relative rounded-lg text-white border-5 border-solid border-white h-15 w-[100%] flex justify-between items-center px-10">
-        <h1 className="text-sm font-semibold font-[Montserrat]">Source</h1>
-        <h1 className="text-sm font-semibold font-[Montserrat]">Type</h1>
-        <h1 className="text-sm font-semibold font-[Montserrat]">Date</h1>
-        <h1 className="text-sm font-semibold font-[Montserrat]">Amount</h1>
+  if (loading) {
+    return <p>Loading expenses...</p>;
+  }
+
+  if (incomeList.length === 0) {
+    return (
+      <div className="flex justify-center">
+        <p>No expenses yet.</p>
       </div>
-      {renderIncome}
-    </>
-  )
+    );
+  }
+
+
+  return (
+    <ul>
+      {incomeList.map((data) => (
+        <li
+          key={data.id}
+          className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200"
+        >
+          <p>{data.source}</p>
+          <p>{data.type}</p>
+          <p>{new Date(data.date).toLocaleDateString()}</p>
+          <p>₱{data.amount}</p>
+        </li>
+      ))}
+    </ul>
+  );
 }

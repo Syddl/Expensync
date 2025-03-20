@@ -9,6 +9,7 @@ const Expenses = () => {
   const [monthExpensesCard, setMonthExpensesCard] = useState(0);
   const [balanceCard, setBalanceCard] = useState(0);
   const [income, setIncome] = useState(0);
+  const [bills, setBills] = useState(0)
 
   const addExpenses = async (formData) => {
     const user = auth.currentUser;
@@ -35,9 +36,7 @@ const Expenses = () => {
     }
   };
 
-
-
-  //display data on card
+  //fetch expenses data
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
@@ -74,11 +73,80 @@ const Expenses = () => {
 
       setWeekExpensesCard(weeklyTotal);
       setMonthExpensesCard(monthlyTotal);
-      setBalanceCard(income - monthlyTotal); // Income vs Expenses
     });
 
     return () => unsubscribe();
-  }, [income]);
+  }, []);
+
+  //fetch income data
+  useEffect(() => {
+    const user = auth.currentUser;
+    if(!user) return;
+
+    const userId = user.uid;
+    const incomeRef = collection(db, "users", userId, "income");
+
+    const unsubscribe = onSnapshot(incomeRef, (snapshot) => {
+      const incomeData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+
+      const today = new Date();
+      const startMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+      let monthIncomeTotal = 0;
+
+      incomeData.forEach((income) => {
+        const incomeDate = new Date(income.date);
+
+        if (incomeDate >= startMonth) {
+          monthIncomeTotal += Number(income.amount);
+        }
+      });
+
+      setIncome(monthIncomeTotal)
+    })
+
+    return () => unsubscribe();
+  }, [])
+
+  //fetch bills
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return;
+  
+    const userId = user.uid;
+    const billsRef = collection(db, "users", userId, "bills");
+  
+    const unsubscribe = onSnapshot(billsRef, (snapshot) => {
+      const billsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+  
+      const today = new Date();
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  
+      let monthlyBillsTotal = 0;
+  
+      billsData.forEach((bill) => {
+        const billDate = new Date(bill.dueDate);
+  
+        if (billDate >= startOfMonth) {
+          monthlyBillsTotal += Number(bill.amount);
+        }
+      });
+  
+      setBills(monthlyBillsTotal);
+    });
+  
+    return () => unsubscribe();
+  }, []); 
+
+  useEffect(() => {
+    setBalanceCard(income - (monthExpensesCard + bills))
+  } , [income, monthExpensesCard, bills])
 
   return (
     <div className="flex justify-center bg-white flex-col">
