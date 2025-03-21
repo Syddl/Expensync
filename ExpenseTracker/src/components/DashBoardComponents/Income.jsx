@@ -17,7 +17,7 @@ export const IncomeList = () => {
       }
   
       const userId = user.uid;
-      const incomeRef = collection(db, "users", userId, "income");
+      const incomeRef = collection(db, "users", userId, "income"); // get the directory of income
   
       // Firestore Listener for Real-Time Updates
       const unsubscribeFirestore = onSnapshot(incomeRef, (snapshot) => {
@@ -25,8 +25,8 @@ export const IncomeList = () => {
           id: doc.id,
           ...doc.data(),
         }))
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        
+        .sort((a, b) => new Date(b.date) - new Date(a.date)) // sort user input from recent to old
+
         setIncomeList(incomeData);
         setLoading(false);
       });

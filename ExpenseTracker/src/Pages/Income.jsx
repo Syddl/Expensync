@@ -38,15 +38,17 @@ const Income = () => {
     }
   };
 
-  //fetch income data
+  //fetch data
   useEffect(() => {
     const user = auth.currentUser;
     if(!user) return;
 
     const userId = user.uid;
     const incomeRef = collection(db, "users", userId, "income");
+    const expensesRef = collection(db, "users", userId, "expenses");
+    const billsRef = collection(db, "users", userId, "bills");
 
-    const unsubscribe = onSnapshot(incomeRef, (snapshot) => {
+    const unsubscribeIncome = onSnapshot(incomeRef, (snapshot) => {
       const incomeData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
@@ -59,14 +61,12 @@ const Income = () => {
 
       let weekIncomeTotal = 0;
       let monthIncomeTotal = 0;
-
       incomeData.forEach((income) => {
         const incomeDate = new Date(income.date);
 
         if (incomeDate >= startMonth) {
           monthIncomeTotal += Number(income.amount);
         }
-
         if (incomeDate >= startOfWeek) {
           weekIncomeTotal += Number(income.amount);
         }
@@ -76,52 +76,26 @@ const Income = () => {
       setMonthIncome(monthIncomeTotal)
     })
 
-    return () => unsubscribe();
-  }, [])
-
-  //fetch expense data
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const userId = user.uid;
-    const expensesRef = collection(db, "users", userId, "expenses");
-
-    const unsubscribe = onSnapshot(expensesRef, (snapshot) => {
+    const unsubscribeExpenses = onSnapshot(expensesRef, (snapshot) => {
       const expensesData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
 
-      // Get the current date
       const today = new Date();
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // Start of the month
 
       let monthlyTotal = 0;
-
       expensesData.forEach((expense) => {
         const expenseDate = new Date(expense.date);
-
         if (expenseDate >= startOfMonth) {
           monthlyTotal += expense.amount;
         }
       });
-
       setExpenses(monthlyTotal);
     });
 
-    return () => unsubscribe();
-  }, []);
-
-  //fetch bills data
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) return;
-  
-    const userId = user.uid;
-    const billsRef = collection(db, "users", userId, "bills");
-  
-    const unsubscribe = onSnapshot(billsRef, (snapshot) => {
+    const unsubscribeBills = onSnapshot(billsRef, (snapshot) => {
       const billsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -131,24 +105,22 @@ const Income = () => {
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   
       let monthlyBillsTotal = 0;
-  
       billsData.forEach((bill) => {
         const billDate = new Date(bill.dueDate);
-  
         if (billDate >= startOfMonth) {
           monthlyBillsTotal += Number(bill.amount);
         }
       });
-  
       setBills(monthlyBillsTotal);
     });
-  
-    return () => unsubscribe();
-  }, []); 
 
-  //store data on balance state
-  useEffect(() => {
     setBalance(monthIncome - (expenses + bills))
+
+    return () => {
+      unsubscribeIncome()
+      unsubscribeExpenses()
+      unsubscribeBills()
+    };
   }, [monthIncome, expenses, bills])
 
   return(

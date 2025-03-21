@@ -46,7 +46,7 @@
     if(billsList.length === 0){
       return(
         <div className='flex justify-center'>
-          <p>No bills yet.</p>
+          <p className='font-[Montserrat] font-semibold mt-3'>No bills yet.</p>
         </div>
       )
     }
@@ -115,7 +115,7 @@
     if(billsList.length === 0){
       return(
         <div className='flex justify-center'>
-          <p>No bills yet.</p>
+          <p className='font-[Montserrat] font-semibold mt-3'>No bills yet.</p>
         </div>
       )
     }
