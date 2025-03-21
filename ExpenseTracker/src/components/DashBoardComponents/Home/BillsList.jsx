@@ -25,7 +25,9 @@
           const billsData = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-          }));
+          }))
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          
           setBillsList(billsData);
           setLoading(false);
         });
