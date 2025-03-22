@@ -37,7 +37,7 @@ export default function ProfileModal() {
 
   return (
     <div>
-      <button onClick={handleOpen} className='w-10 h-10 ml-15 font-bold cursor-pointer hover:bg-[#7f5efd] hover:text-white pb-2 rounded-4xl bg-white'>...</button>
+      <button onClick={handleOpen} className='w-10 h-10 ml-15 font-bold cursor-pointer text-[#7f5efd] hover:bg-[#7f5efd] hover:text-white pb-2 rounded-4xl bg-white'>...</button>
       <Modal
         open={open}
         onClose={handleClose}

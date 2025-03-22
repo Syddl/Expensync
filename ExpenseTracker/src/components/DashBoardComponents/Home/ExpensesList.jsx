@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, doc, deleteDoc, documentId } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-
+import { toast } from "sonner";
+import EditModal from '../EditModal';
+import DeleteModalExpenses from "../DeleteModalExpenses";
 // No limit render
 export const ExpensesList = () => {
   const [expenseList, setExpenseList] = useState([]);
@@ -32,44 +34,67 @@ export const ExpensesList = () => {
         setExpenseList(expensesData);
         setLoading(false);
       });
-
       // Cleanup the Firestore listener when user logs out
       return () => unsubscribeFirestore();
     });
-
     // Cleanup the Auth listener when the component unmounts
     return () => unsubscribeAuth();
   }, []);
-
   if (loading) {
     return <p>Loading expenses...</p>;
   }
-
   if (expenseList.length === 0) {
     return (
       <div className="flex justify-center">
-        <p>No expenses yet.</p>
+        <p className='font-[Montserrat] font-semibold mt-3'>No expenses yet.</p>
       </div>
     );
   }
 
+  //delete wrong user input
+  const deleteItem = async (documentID) => {
+    const user = auth.currentUser;
+    if (user) {
+      try {
+          await deleteDoc(doc(db, "users", user.uid, "expenses", documentID));
+          toast.success("Expense deleted successfully!");
+      } catch (error) {
+          toast.error("Failed to delete expense.");
+          console.error(error);
+      }
+    } else {
+      toast.error("No user logged in.");
+    }
+  };
+
   return (
-    <ul>
+    <ul className="w-full">
       {expenseList.map((item) => (
         <li
           key={item.id}
-          className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200"
+          className="even:bg-gray-100 odd:bg-white shadow-md 
+                     hover:scale-102 transition-transform duration-300 
+                     mb-1 border-l-4 rounded-sm border-l-[#7f5efd] 
+                     flex items-center justify-between 
+                     px-5 py-3 w-full"
         >
-          <p>{item.name}</p>
-          <p>{item.type}</p>
-          <p>{item.date ? new Date(item.date).toLocaleDateString() : "No date"}</p>
-          <p>₱{item.amount}</p>
+          <p className="w-1/4">{item.name}</p>
+          <p className="w-1/5 text-center">{item.type}</p>
+          <p className="w-1/5 text-center">
+            {item.date ? new Date(item.date).toLocaleDateString() : "No date"}
+          </p>
+          <p className="w-1/5 text-right">₱{item.amount}</p>
+          
+          <div className="flex gap-2 w-1/5 justify-end">
+            <EditModal data={item} />
+            <DeleteModalExpenses deleteFunction={deleteItem} documentID={item.id} />
+          </div>
         </li>
       ))}
     </ul>
   );
+  
 };
-
 
 // Has limit to 3
 export const ExpensesListDashboard = () => {
@@ -115,25 +140,31 @@ export const ExpensesListDashboard = () => {
 
   return (
     <>
-      <div className="bg-[#7f5efd] rounded-lg text-white border-5 border-solid border-white h-10 w-[100%] flex justify-between items-center px-10">
-        <h1 className="text-sm font-semibold font-[Montserrat]">Name</h1>
-        <h1 className="text-sm font-semibold font-[Montserrat]">Type</h1>
-        <h1 className="text-sm font-semibold font-[Montserrat]">Date</h1>
-        <h1 className="text-sm font-semibold font-[Montserrat]">Amount</h1>
+      <div className="bg-[#7f5efd] rounded-lg text-white border-5 border-solid border-white 
+                      py-3 w-full flex items-center px-5 text-sm font-semibold font-[Montserrat]">
+        <h1 className="w-1/4 text-left">Name</h1>
+        <h1 className="w-1/5 text-center">Type</h1>
+        <h1 className="w-1/5 text-center">Date</h1>
+        <h1 className="w-1/5 text-right">Amount</h1>
       </div>
-      <ul>
+      <ul className="w-full">
         {expenseList.slice(0, 3).map((item) => (
           <li
             key={item.id}
-            className="mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-10 ml-1.5 w-[99.3%] px-5 bg-gray-200"
+            className="shadow-md hover:scale-102 transition-transform duration-300 
+                       mb-1 border-l-4 rounded-sm border-l-[#7f5efd] flex items-center 
+                       px-5 py-1.5 bg-gray-200 mx-1"
           >
-            <p>{item.name}</p>
-            <p>{item.type}</p>
-            <p>{item.date ? new Date(item.date).toLocaleDateString() : "No date"}</p>
-            <p>₱{item.amount}</p>
+            <p className="w-1/4 text-left">{item.name}</p>
+            <p className="w-1/5 text-center">{item.type}</p>
+            <p className="w-1/5 text-center">
+              {item.date ? new Date(item.date).toLocaleDateString() : "No date"}
+            </p>
+            <p className="w-1/5 text-right">₱{item.amount}</p>
           </li>
         ))}
       </ul>
     </>
   );
+  
 };

@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from '../firebase';
 import { useState, useEffect } from "react";
+import { toast } from 'sonner';
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const LogIn = () => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        navigate("/dashboard"); // Redirect if logged in
+        navigate("/Dashboard"); // Redirect if logged in
       }
     });
 
@@ -25,20 +26,18 @@ const LogIn = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent form refresh
-
     if (!email || !password) {
-      alert("Email and password are required!");
+      toast.error("Email and password are required!");
       return;
     }
-
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
       navigate("/dashboard");
       console.log("✅ User logged in:", userCredential.user);
+      toast.success("Login successful")
     } catch (error) {
-      console.error("❌ Error logging in:", error.message);
-      alert(error.message);
+      toast.error("❌ Error logging in:", error.message);
     }
   };
 

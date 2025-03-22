@@ -1,7 +1,8 @@
   import { useState, useEffect } from 'react'
-  import { collection, onSnapshot } from "firebase/firestore";
+  import { collection, onSnapshot, doc, deleteDoc } from "firebase/firestore";
   import { auth, db } from "../../../firebase";
   import { onAuthStateChanged } from "firebase/auth";
+  import { toast } from "sonner";
 
   export const BillsList = () => {
 
@@ -9,7 +10,6 @@
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
       const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
         if (!user) {
           console.log("No user logged in");
@@ -31,18 +31,14 @@
           setBillsList(billsData);
           setLoading(false);
         });
-  
         return () => unsubscribeFirestore(); 
       });
-  
       return () => unsubscribeAuth(); 
     }, []);
       
-
     if(loading){
       return <p>Loading bills...</p>
     }
-
     if(billsList.length === 0){
       return(
         <div className='flex justify-center'>
@@ -106,12 +102,9 @@
   
       return () => unsubscribeAuth(); 
     }, []);
-      
-
     if(loading){
       return <p>Loading bills...</p>
     }
-
     if(billsList.length === 0){
       return(
         <div className='flex justify-center'>
@@ -120,17 +113,41 @@
       )
     }
 
+    //delete wrong user input
+    const deleteItem = async (documentID) => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+            await deleteDoc(doc(db, "users", user.uid, "bills", documentID));
+            toast.success("Expense deleted successfully!");
+        } catch (error) {
+            toast.error("Failed to delete expense.");
+            console.error(error);
+        }
+      } else {
+        toast.error("No user logged in.");
+      }
+    };
+
     return(
-      <>
+      <ul className="w-full">
         {billsList.map((bill) => (
-          <li key={bill.id} className='mb-1 border-l-10 rounded-sm border-l-[#7f5efd] flex justify-between items-center h-15 ml-1.5 w-[99.3%] px-5 bg-gray-200'>
-            <p>{bill.billName}</p>
-            <p>{bill.billType}</p>
-            <p>{new Date(bill.dueDate).toLocaleDateString()}</p>
-            <p>₱{bill.amount}</p>
+          <li key={bill.id} className='even:bg-gray-100 odd:bg-white shadow-md 
+                     hover:scale-102 transition-transform duration-300 
+                     mb-1 border-l-4 rounded-sm border-l-[#7f5efd] 
+                     flex items-center justify-between 
+                     px-5 py-3 w-full'>
+            <p className="w-1/4">{bill.billName}</p>
+            <p className="w-1/5 text-center">{bill.billType}</p>
+            <p className="w-1/5 text-center">{new Date(bill.dueDate).toLocaleDateString()}</p>
+            <p className="w-1/5 text-right">₱{bill.amount}</p>
+            <div className="flex gap-2 w-1/5 justify-end">
+              <button onClick={() => console.log("w")} className="bg-[#7f5efd] hover:bg-[#967AFF] cursor-pointer text-[12px] w-12 h-9 rounded-md text-white font-[Montserrat] font-semibold">Edit</button>
+              <button onClick={() => deleteItem(bill.id)} className="bg-[#7f5efd] hover:bg-[#967AFF] cursor-pointer text-[12px] w-12 h-9 rounded-md text-white font-[Montserrat] font-semibold">Delete</button>
+            </div>  
           </li>
         ))}
-      </>
+      </ul>
     )
   }
 

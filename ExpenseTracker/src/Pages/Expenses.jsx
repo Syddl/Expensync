@@ -3,8 +3,10 @@ import { ExpensesList } from '../components/DashBoardComponents/Home/ExpensesLis
 import AmountCard from '../components/DashBoardComponents/AmountCard';
 import { db, auth } from "../firebase";
 import { collection, addDoc, serverTimestamp, onSnapshot } from "firebase/firestore";
+import { toast } from 'sonner';
 
-const Expenses = () => {
+
+const Expenses = (props) => {
   const [weekExpensesCard, setWeekExpensesCard] = useState(0);
   const [monthExpensesCard, setMonthExpensesCard] = useState(0);
   const [balanceCard, setBalanceCard] = useState(0);
@@ -31,6 +33,7 @@ const Expenses = () => {
         amount,
         createdAt: serverTimestamp(),
       });
+      toast.success("Expense added successfully!")
     } catch (error) {
       console.error("Error adding expense:", error.message);
     }
@@ -132,7 +135,7 @@ const Expenses = () => {
         <AmountCard type="Expenses this month" amount={monthExpensesCard} />
         <AmountCard type="Income vs Expenses" amount={balanceCard} />
       </div>
-      <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll">
+      <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] max-w-[94.3rem] overflow-scroll">
         <form action={addExpenses} className="h-10 flex justify-around pb-13">
           <div>
             <label className="font-[Montserrat] font-semibold text-md mr-5">Item Name</label>
@@ -178,13 +181,15 @@ const Expenses = () => {
               placeholder='₱20,000.00'
             />
           </div>
-          <button type="submit" className='bg-[#7f5efd] h-10 w-25 text-white font-semibold rounded-lg cursor-pointer '>Submit</button>
+          <button type="submit" className='bg-[#7f5efd] h-10 w-25 text-white font-semibold rounded-lg cursor-pointer ml-10'>Submit</button>
         </form>
-        <div className="bg-[#7f5efd] relative rounded-lg text-white border-5 border-solid border-white h-15 w-[100%] flex justify-between items-center px-10">
-          <h1 className="text-sm font-semibold font-[Montserrat]">Name</h1>
-          <h1 className="text-sm font-semibold font-[Montserrat]">Type</h1>
-          <h1 className="text-sm font-semibold font-[Montserrat]">Date</h1>
-          <h1 className="text-sm font-semibold font-[Montserrat]">Amount</h1>
+        <div className="bg-[#7f5efd] relative rounded-lg text-white border-5 border-solid border-white 
+                    h-15 w-full flex justify-between items-center px-5 py-3 text-sm font-semibold font-[Montserrat]">
+          <h1 className="w-1/4 text-left">Name</h1>
+          <h1 className="w-1/5 text-center">Type</h1>
+          <h1 className="w-1/5 text-center">Date</h1>
+          <h1 className="w-1/5 text-right">Amount</h1>
+          <h1 className="w-1/5 text-right">Modification</h1>
         </div>
         <ExpensesList/>
       </main>

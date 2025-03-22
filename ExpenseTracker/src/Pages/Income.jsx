@@ -3,6 +3,7 @@ import AmountCard from '../components/DashBoardComponents/AmountCard'
 import { IncomeList } from "../components/DashBoardComponents/Income"
 import { db, auth } from '../firebase'
 import { collection, addDoc, serverTimestamp, onSnapshot } from 'firebase/firestore'
+import { toast } from 'sonner'
 
 
 const Income = () => {
@@ -33,6 +34,7 @@ const Income = () => {
         amount,
         createAt: serverTimestamp()
       })
+      toast.success("Income added successfully!")
     }catch(e){
       console.log("Income error:", e)
     }
@@ -53,7 +55,6 @@ const Income = () => {
         id: doc.id,
         ...doc.data()
       }))
-
       const today = new Date();
       const startOfWeek = new Date(today);
       startOfWeek.setDate(today.getDate() - today.getDay());
@@ -71,7 +72,6 @@ const Income = () => {
           weekIncomeTotal += Number(income.amount);
         }
       });
-
       setWeekIncome(weekIncomeTotal)
       setMonthIncome(monthIncomeTotal)
     })
@@ -81,7 +81,6 @@ const Income = () => {
         id: doc.id,
         ...doc.data(),
       }));
-
       const today = new Date();
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // Start of the month
 
@@ -89,7 +88,7 @@ const Income = () => {
       expensesData.forEach((expense) => {
         const expenseDate = new Date(expense.date);
         if (expenseDate >= startOfMonth) {
-          monthlyTotal += expense.amount;
+          monthlyTotal += Number(expense.amount);
         }
       });
       setExpenses(monthlyTotal);
@@ -100,7 +99,6 @@ const Income = () => {
         id: doc.id,
         ...doc.data(),
       }));
-  
       const today = new Date();
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   
@@ -133,7 +131,7 @@ const Income = () => {
         <AmountCard type="Income this month" amount={monthIncome}/>
         <AmountCard type="Income vs Expenses" amount={balance}/>
       </div>
-      <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll">
+      <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll max-w-[94.3rem]">
       <form action={addIncome} className="h-10 flex justify-around pb-13">
           <div>
             <label className="font-[Montserrat] font-semibold text-md mr-5">Source</label>
@@ -175,8 +173,16 @@ const Income = () => {
               placeholder='₱10,000.00'
             />
           </div>
-          <button type="submit" className='bg-[#7f5efd] h-10 w-25 text-white font-semibold rounded-lg cursor-pointer '>Submit</button>
+          <button type="submit" className='bg-[#7f5efd] h-10 w-25 text-white font-semibold rounded-lg cursor-pointer ml-10'>Submit</button>
         </form>
+        <div className="bg-[#7f5efd] relative rounded-lg text-white border-5 border-solid border-white 
+                    h-15 w-full flex justify-between items-center px-5 py-3 text-sm font-semibold font-[Montserrat]">
+          <h1 className="w-1/4 text-left">Name</h1>
+          <h1 className="w-1/5 text-center">Type</h1>
+          <h1 className="w-1/5 text-center">Date</h1>
+          <h1 className="w-1/5 text-right">Amount</h1>
+          <h1 className="w-1/5 text-right">Modification</h1>
+        </div>
         <IncomeList/>  
       </main>
     </>

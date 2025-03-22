@@ -31,7 +31,6 @@ const  Home = () => {
           id: doc.id,
           ...doc.data(),
         }));
-  
         const today = new Date();
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
 
@@ -39,7 +38,7 @@ const  Home = () => {
         expensesData.forEach((expense) => {
           const expenseDate = new Date(expense.date);
           if (expenseDate >= startOfMonth) {
-            monthlyTotal += expense.amount;
+            monthlyTotal += Number(expense.amount);
           }
         });
         setExpenses(monthlyTotal);
@@ -51,7 +50,6 @@ const  Home = () => {
           id: doc.id,
           ...doc.data(),
         }));
-    
         const today = new Date();
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     
@@ -71,7 +69,6 @@ const  Home = () => {
           id: doc.id,
           ...doc.data()
         }))
-  
         const today = new Date();
         const startMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   
@@ -115,7 +112,7 @@ const  Home = () => {
             </ul>
             <div className="flex justify-center mt-3">
               <Link to="/Dashboard/Bills">
-                <button className="bg-[#7f5efd] px-2 cursor-pointer font-[Montserrat] text-white mb-1 p-1 rounded-md text-sm font-semibold">Add Bill</button>
+                <button className="hover:bg-[#967AFF] bg-[#7f5efd] px-2 cursor-pointer font-[Montserrat] text-white mb-1 p-1 rounded-md text-sm font-semibold">Add Bill</button>
               </Link>
             </div> 
           </div>
@@ -125,7 +122,7 @@ const  Home = () => {
             <div className="flex justify-between items-center px-5">
               <p className="text-[#565857] text-md font-semibold font-[Montserrat] mb-1">Expenses</p>
               <Link to="/Dashboard/Expenses">
-              <button className="bg-[#7f5efd] cursor-pointer font-[Montserrat] text-white mb-1 p-1 rounded-md text-sm px-2 font-semibold">Add new</button>
+              <button className="hover:bg-[#967AFF] bg-[#7f5efd] cursor-pointer font-[Montserrat] text-white mb-1 p-1 rounded-md text-sm px-2 font-semibold">Add new</button>
               </Link>
             </div>
             <div className="container bg-white w-90% h-44 ">

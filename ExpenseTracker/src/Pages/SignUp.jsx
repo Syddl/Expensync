@@ -24,6 +24,8 @@ const SignUp = () => {
         email: user.email,
         createdAt: new Date(),
       });
+      navigate("/Login")
+      toast.success("SignUp is successful")
     } catch (error) {
       console.error("Error signing up:", error.message);
     }
