@@ -3,6 +3,8 @@
   import { auth, db } from "../../../firebase";
   import { onAuthStateChanged } from "firebase/auth";
   import { toast } from "sonner";
+  import DeleteModalExpenses from '../DeleteModalExpenses';
+  import BillsEditModal from '../BillsEditModal'
 
   export const BillsList = () => {
 
@@ -103,7 +105,11 @@
       return () => unsubscribeAuth(); 
     }, []);
     if(loading){
-      return <p>Loading bills...</p>
+      return (
+        <div className='flex justify-center'>
+          <p className='font-[Montserrat] font-semibold mt-3'>Loading bills...</p>
+        </div>
+      )
     }
     if(billsList.length === 0){
       return(
@@ -142,8 +148,8 @@
             <p className="w-1/5 text-center">{new Date(bill.dueDate).toLocaleDateString()}</p>
             <p className="w-1/5 text-right">₱{bill.amount}</p>
             <div className="flex gap-2 w-1/5 justify-end">
-              <button onClick={() => console.log("w")} className="bg-[#7f5efd] hover:bg-[#967AFF] cursor-pointer text-[12px] w-12 h-9 rounded-md text-white font-[Montserrat] font-semibold">Edit</button>
-              <button onClick={() => deleteItem(bill.id)} className="bg-[#7f5efd] hover:bg-[#967AFF] cursor-pointer text-[12px] w-12 h-9 rounded-md text-white font-[Montserrat] font-semibold">Delete</button>
+              <BillsEditModal data={bill}/>
+              <DeleteModalExpenses deleteFunction={deleteItem} documentID={bill.id}/>
             </div>  
           </li>
         ))}

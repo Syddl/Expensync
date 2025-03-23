@@ -4,6 +4,7 @@ import { auth, db } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { toast } from 'sonner'
 import DeleteModalExpenses from './DeleteModalExpenses'
+import IncomeEditModal from './IncomeEditModal'
 
 export const IncomeList = () => {
   const [incomeList, setIncomeList] = useState([])
@@ -81,14 +82,7 @@ export const IncomeList = () => {
           <p className="w-1/5 text-right">₱{data.amount}</p>
 
           <div className="flex gap-2 w-1/5 justify-end">
-            <button 
-              onClick={() => console.log("w")} 
-              className="bg-[#7f5efd] hover:bg-[#967AFF] cursor-pointer 
-                         text-[12px] w-12 h-9 rounded-md text-white 
-                         font-[Montserrat] font-semibold"
-            >
-              Edit
-            </button>
+            <IncomeEditModal data={data}/>
             <DeleteModalExpenses deleteFunction={deleteItem} documentID={data.id} />
           </div>
         </li>
