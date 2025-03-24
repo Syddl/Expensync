@@ -177,7 +177,7 @@ const Income = () => {
         </form>
         <div className="bg-[#7f5efd] relative rounded-lg text-white border-5 border-solid border-white 
                     h-15 w-full flex justify-between items-center px-5 py-3 text-sm font-semibold font-[Montserrat]">
-          <h1 className="w-1/4 text-left">Name</h1>
+          <h1 className="w-1/4 text-left">Source</h1>
           <h1 className="w-1/5 text-center">Type</h1>
           <h1 className="w-1/5 text-center">Date</h1>
           <h1 className="w-1/5 text-right">Amount</h1>
