@@ -88,14 +88,18 @@ export default function ProfileModal() {
             <header className=''>
               <h1 className='font-semibold font-[Montserrat] text-2xl mb-5 text-[#00093c]'>
                 My Profile
-              </h1>
-              
+              </h1> 
             </header>
             <main className='flex  gap-10'>
               <div className="pt-2 ">
                 <img src={Hero} alt="pfp" className='border-2 border-[#7f5efd] w-30 h-30 rounded-[100%]' />
                 <div className='flex justify-center mt-2'>
-                 <button onClick={() => setIsEdit(prev => !prev)} className='hover:text-white focus:text-white focus:bg-[#7f5efd] hover:bg-[#7f5efd] cursor-pointer rounded-md w-18 h-8 text-[#7f5efd] text-sm border-[#7f5efd] border-2 font-semibold font-[Montserrat]'>{isEdit ? "Edit" : "Save"}</button>
+                {isEdit ? 
+                  <button onClick={() => setIsEdit(prev => !prev)} className='hover:text-white focus:text-white focus:bg-[#7f5efd] hover:bg-[#7f5efd] cursor-pointer rounded-md w-18 h-8 text-[#7f5efd] text-sm border-[#7f5efd] border-2 font-semibold font-[Montserrat]'>Edit</button> :
+                  <div>
+                    <input accept="image/*" type="file" className='border-[#7f5efd] w-24.5 rounded-md py-1 pl-1.5 border-2 cursor-pointer font-[Montserrat] text-sm font-semibold text-[#7f5efd]'/> 
+                  </div>
+                }
                 </div>
               </div>
               <form action={""} className='flex flex-col font-md text-[Montserrat]'>
@@ -106,10 +110,13 @@ export default function ProfileModal() {
                 <label htmlFor="password" className='mb-1 text-[#00093c]'>Password</label>
                 <input onChage={handleChange} value="somerandomValue" type="password" disabled={isEdit} id='name' className='text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1' />
                 <div className='pt-5 flex gap-2 justify-end'>
-                  {isEdit ? <button onClick={handleClose} className=' cursor-pointer rounded-md w-18 h-9 text-[#7f5efd] text-sm border-[#7f5efd] border-2 font-semibold font-[Montserrat]'>Cancel</button> : ""}
+                  {isEdit ? 
+                    <button onClick={handleClose} className=' cursor-pointer rounded-md w-18 h-9 text-[#7f5efd] text-sm border-[#7f5efd] border-2 font-semibold font-[Montserrat]'>Cancel</button> : 
+                    <button onClick={() => setIsEdit(prev => !prev)} className=' cursor-pointer rounded-md w-18 h-9 text-[#7f5efd] text-sm border-[#7f5efd] border-2 font-semibold font-[Montserrat]'>Cancel</button>
+                  }
                   {isEdit ? 
                     <button  onClick={logOutAccount} className='bg-[#7f5efd] cursor-pointer rounded-md w-18 h-9 text-white text-sm  font-semibold font-[Montserrat]'>Log out</button> : 
-                    <button onClick={handleClose} className=' cursor-pointer rounded-md w-18 h-9 text-[#7f5efd] text-sm border-[#7f5efd] border-2 font-semibold font-[Montserrat]'>Cancel</button>
+                    <button onClick={handleClose} className='bg-[#7f5efd] cursor-pointer rounded-md w-18 h-9 text-white text-sm  font-semibold font-[Montserrat]'>Save</button>
                   }
                 </div>
               </form>
