@@ -7,7 +7,8 @@ import { FaEllipsisH } from "react-icons/fa";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
+
 
 const style = {
   position: 'absolute',
@@ -31,7 +32,9 @@ export default function ProfileModal() {
     email: "",
     photoURL: "",
   });
-  const [newPassword, setNewPassword] = useState("");
+  const [previewUrl, setPreviewUrl] = useState(null)
+  const fileInputRef = useRef(null)
+  const [image, setImage] = useState(null)
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
@@ -70,12 +73,36 @@ export default function ProfileModal() {
     }
   };
 
-  const handleChange = (formData) => {
-    try{
-      const profilePicture = form.image;
-      const name = formData.name
-    }catch(e){
-      console.log(e)
+  const handleChange = async (event) => {
+    event.preventDefault()
+    const fileInput = fileInputRef.current
+
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0]
+      console.log("File selected:", file.name)
+
+      // Create a preview URL
+      const objectUrl = URL.createObjectURL(file)
+      setPreviewUrl(objectUrl)
+
+      // If you need to upload the file using FormData:
+      const formData = new FormData()
+      formData.append("imagePFP", file)
+
+      // Now you can use this formData for uploading
+      // Example: await uploadFile(formData);
+      setImage(formData)
+    } else {
+      console.log("No file selected")
+    }
+  }
+
+
+  const handleFileSelect = (event) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0]
+      const objectUrl = URL.createObjectURL(file)
+      setPreviewUrl(objectUrl)
     }
   }
 
@@ -95,25 +122,25 @@ export default function ProfileModal() {
                 My Profile
               </h1> 
             </header>
-            <form action={handleChange} className='flex  gap-10'>
+            <form onSubmit={handleChange} className='flex  gap-10'>
               <div className="pt-2 ">
                 <img src={Hero} alt="pfp" className='border-2 border-[#7f5efd] w-30 h-30 rounded-[100%]' />
                 <div className='flex justify-center mt-2'>
                 {isEdit ? 
                   <button onClick={() => setIsEdit(prev => !prev)} className='hover:text-white focus:text-white focus:bg-[#7f5efd] hover:bg-[#7f5efd] cursor-pointer rounded-md w-18 h-8 text-[#7f5efd] text-sm border-[#7f5efd] border-2 font-semibold font-[Montserrat]'>Edit</button> :
                   <div>
-                    <input accept="image/*" type="file" name="image" className='border-[#7f5efd] w-24.5 rounded-md py-1 pl-1.5 border-2 cursor-pointer font-[Montserrat] text-sm font-semibold text-[#7f5efd]'/> 
+                    <input ref={fileInputRef} onChange={handleFileSelect} accept="image/*" type="file" name="imagePFP" className='border-[#7f5efd] w-24.5 rounded-md py-1 pl-1.5 border-2 cursor-pointer font-[Montserrat] text-sm font-semibold text-[#7f5efd]'/> 
                   </div>
                 }
                 </div>
               </div>
               <div className='flex flex-col font-md text-[Montserrat]'>
                 <label htmlFor="name" className='mb-1 text-[#00093c]'>Name</label>
-                <input onChage={handleChange} value={userData.name} disabled={isEdit} type="text" name="name" id='name' className='text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1' />
+                <input onChange={handleChange} value={userData.name} disabled={isEdit} type="text" name="name" id='name' className='text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1' />
                 <label htmlFor="ename" className='mb-1 text-[#00093c]'>Email</label>
-                <input onChage={handleChange} value={userData.email} type="email" id='name' disabled={true} className='text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1' />
+                <input value={userData.email} type="email" id='name' disabled={true} className='text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1' />
                 <label htmlFor="password" className='mb-1 text-[#00093c]'>Password</label>
-                <input onChage={handleChange} value="somerandomValue" type="password" disabled={true} id='name' className='text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1' />
+                <input value="somerandomValue" type="password" disabled={true} id='name' className='text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1' />
                 <div className='pt-5 flex gap-2 justify-end'>
                   {isEdit ? 
                     <button onClick={handleClose} className=' cursor-pointer rounded-md w-18 h-9 text-[#7f5efd] text-sm border-[#7f5efd] border-2 font-semibold font-[Montserrat]'>Cancel</button> : 
@@ -121,7 +148,7 @@ export default function ProfileModal() {
                   }
                   {isEdit ? 
                     <button  onClick={logOutAccount} className='bg-[#7f5efd] cursor-pointer rounded-md w-18 h-9 text-white text-sm  font-semibold font-[Montserrat]'>Log out</button> : 
-                    <button onClick={handleClose} className='bg-[#7f5efd] cursor-pointer rounded-md w-18 h-9 text-white text-sm  font-semibold font-[Montserrat]'>Save</button>
+                    <button onClick={handleChange} className='bg-[#7f5efd] cursor-pointer rounded-md w-18 h-9 text-white text-sm  font-semibold font-[Montserrat]'>Save</button>
                   }
                 </div>
               </div>

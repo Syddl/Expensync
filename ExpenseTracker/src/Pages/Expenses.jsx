@@ -127,8 +127,20 @@ const Expenses = (props) => {
 
   return (
     <div className="flex justify-center bg-white flex-col">
-      <header className="flex justify-between items-center h-20 pt-5 mx-10">
-        <h1 className="text-[#00093c] font-[Montserrat] font-bold text-3xl">Expenses</h1>
+      <header className='flex justify-between items-center h-20  pt-5 mx-10'>
+        <h1 className='text-[#00093c] font-[Montserrat] font-bold text-3xl'>Expense</h1>
+        <select 
+          onChange={""}
+          name="duration" 
+          id="duration" 
+          className="w-40 cursor-pointer hover:bg-[#967AFF] text-white py-2 rounded-lg font-bold transition focus:outline-none focus:ring-4 focus:ring-purple-500 bg-[#7f5efd] font-[Montserrat] appearance-none text-center"
+        >
+          <option value="" selected hidden>Select date</option>
+          <option className="text-center" value="week">last 7 days</option>
+          <option className="text-center" value="month">last 30 days</option>
+          <option className="text-center" value="year">last 12 months</option>
+          <option className="text-center" value="allTime">all time</option>
+        </select>
       </header>
       <div className="flex gap-5 pt-5 mx-10 mb-5">
         <AmountCard type="Expenses this week" amount={weekExpensesCard} />

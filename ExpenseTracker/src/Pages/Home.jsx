@@ -3,7 +3,6 @@ import ChartsOverview from "../components/DashBoardComponents/Home/ChartsOvervie
 import { BillsList } from "../components/DashBoardComponents/Home/BillsList"
 import { ExpensesListDashboard } from "../components/DashBoardComponents/Home/ExpensesList"
 import AmountCard from '../components/DashBoardComponents/AmountCard'
-import Header from "../components/DashBoardComponents/Header"
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot } from "firebase/firestore";
 import { db, auth } from "../firebase";
@@ -14,6 +13,7 @@ const  Home = () => {
   const [income, setIncome] = useState(0);
   const [bills, setBills] = useState(0)
   const [totalExpenses, setTotalExpenses] = useState(0)
+  const [selected, setSelected] = useState("")
 
   //data
     useEffect(() => {
@@ -33,7 +33,7 @@ const  Home = () => {
         }));
         const today = new Date();
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
-
+        
         let monthlyTotal = 0;
         expensesData.forEach((expense) => {
           const expenseDate = new Date(expense.date);
@@ -91,10 +91,27 @@ const  Home = () => {
       };
     }, [expenses, totalExpenses]);
   
+    const handleDate = () => {
+
+    }
 
   return(
     <>
-      <Header title="Dashboard"/>
+     <header className='flex justify-between items-center h-20  pt-5 mx-10'>
+      <h1 className='text-[#00093c] font-[Montserrat] font-bold text-3xl'>Dashboard</h1>
+      <select 
+        onChange={handleDate}
+        name="duration" 
+        id="duration" 
+        className="w-40 cursor-pointer hover:bg-[#967AFF] text-white py-2 rounded-lg font-bold transition focus:outline-none focus:ring-4 focus:ring-purple-500 bg-[#7f5efd] font-[Montserrat] appearance-none text-center"
+      >
+        <option value="" selected hidden>Select date</option>
+        <option className="text-center" value="week">last 7 days</option>
+        <option className="text-center" value="month">last 30 days</option>
+        <option className="text-center" value="year">last 12 months</option>
+        <option className="text-center" value="allTime">all time</option>
+      </select>
+    </header>
      <main className=" h-auto w-100% pl-10 pr-10 pt-5">
         <div className="upperContent flex gap-5">
           <AmountCard type="Total Expenses" amount={totalExpenses}/>
