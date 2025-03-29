@@ -1,122 +1,30 @@
 import { Link } from 'react-router-dom'
-import ChartsOverview from "../components/DashBoardComponents/Home/ChartsOverview"
+import { useFetchUserData } from '../hooks/fetchData';
 import { BillsList } from "../components/DashBoardComponents/Home/BillsList"
 import { ExpensesListDashboard } from "../components/DashBoardComponents/Home/ExpensesList"
+import ChartsOverview from "../components/DashBoardComponents/Home/ChartsOverview"
 import AmountCard from '../components/DashBoardComponents/AmountCard'
-import { useState, useEffect } from 'react'
-import { collection, onSnapshot } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import PageHeader from '../components/DashBoardComponents/PageHeader';
 
 const  Home = () => {
-  const [expenses, setExpenses] = useState(0);
-  const [balanceCard, setBalanceCard] = useState(0);
-  const [income, setIncome] = useState(0);
-  const [bills, setBills] = useState(0)
-  const [totalExpenses, setTotalExpenses] = useState(0)
-  const [selected, setSelected] = useState("")
-
-  //data
-    useEffect(() => {
-      const user = auth.currentUser;
-      if (!user) return;  
+  const {totalCombineExpenses, 
+         monthCombineExpenses, 
+         weekCombineExpenses, 
+         incomeVsExpensesTotal, 
+         totalIncome, selected} = useFetchUserData()
   
-      const userId = user.uid;
-      const expensesRef = collection(db, "users", userId, "expenses");
-      const billsRef = collection(db, "users", userId, "bills");
-      const incomeRef = collection(db, "users", userId, "income");
-  
-      //expenses
-      const unsubscribeExpenses = onSnapshot(expensesRef, (snapshot) => {
-        const expensesData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        const today = new Date();
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
-        
-        let monthlyTotal = 0;
-        expensesData.forEach((expense) => {
-          const expenseDate = new Date(expense.date);
-          if (expenseDate >= startOfMonth) {
-            monthlyTotal += Number(expense.amount);
-          }
-        });
-        setExpenses(monthlyTotal);
-      });
-  
-      //bills
-      const unsubscribeBills = onSnapshot(billsRef, (snapshot) => {
-        const billsData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        const today = new Date();
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    
-        let monthlyBillsTotal = 0;
-        billsData.forEach((bill) => {
-          const billDate = new Date(bill.dueDate);
-          if (billDate >= startOfMonth) {
-            monthlyBillsTotal += Number(bill.amount);
-          }
-        });
-        setBills(monthlyBillsTotal);
-      });
-
-      //income
-      const unsubscribeIncome = onSnapshot(incomeRef, (snapshot) => {
-        const incomeData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-        const today = new Date();
-        const startMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  
-        let monthIncomeTotal = 0;
-        incomeData.forEach((income) => {
-          const incomeDate = new Date(income.date);
-          if (incomeDate >= startMonth) {
-            monthIncomeTotal += Number(income.amount);
-          }
-        });
-        setIncome(monthIncomeTotal)
-      })
-      setTotalExpenses(bills + expenses);
-      setBalanceCard(income - totalExpenses)
-
-      return () => {
-        unsubscribeExpenses()
-        unsubscribeBills()
-        unsubscribeIncome()
-      };
-    }, [expenses, totalExpenses]);
-  
-    const handleDate = () => {
-
-    }
+  const handleDate = (e) => {
+    console.log(e.target.value)
+  }
 
   return(
     <>
-     <header className='flex justify-between items-center h-20  pt-5 mx-10'>
-      <h1 className='text-[#00093c] font-[Montserrat] font-bold text-3xl'>Dashboard</h1>
-      <select 
-        onChange={handleDate}
-        name="duration" 
-        id="duration" 
-        className="w-40 cursor-pointer hover:bg-[#967AFF] text-white py-2 rounded-lg font-bold transition focus:outline-none focus:ring-4 focus:ring-purple-500 bg-[#7f5efd] font-[Montserrat] appearance-none text-center"
-      >
-        <option value="" selected hidden>Select date</option>
-        <option className="text-center" value="week">last 7 days</option>
-        <option className="text-center" value="month">last 30 days</option>
-        <option className="text-center" value="year">last 12 months</option>
-        <option className="text-center" value="allTime">all time</option>
-      </select>
-    </header>
+     <PageHeader name="Dashboard" handleDate={handleDate}/>
      <main className=" h-auto w-100% pl-10 pr-10 pt-5">
         <div className="upperContent flex gap-5">
-          <AmountCard type="Total Expenses" amount={totalExpenses}/>
-          <AmountCard type="Income" amount={income}/>
-          <AmountCard type="Expenses vs Income" amount={balanceCard}/>
+          <AmountCard type="Expenses" subtext="all time" amount={totalCombineExpenses}/>
+          <AmountCard type="Income" subtext="all time" amount={totalIncome}/>
+          <AmountCard type="Income vs Expenses" subtext="all time" amount={incomeVsExpensesTotal}/>
         </div>
         <div className="mainContent flex gap-5 mt-5">
           <div className="container bg-[#f1f1f1] h-100 rounded-xl flex flex-col items-center py-5">

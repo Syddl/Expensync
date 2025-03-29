@@ -1,17 +1,13 @@
-import { useState, useEffect } from 'react';
-import { ExpensesList } from '../components/DashBoardComponents/Home/ExpensesList';
-import AmountCard from '../components/DashBoardComponents/AmountCard';
 import { db, auth } from "../firebase";
-import { collection, addDoc, serverTimestamp, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp} from "firebase/firestore";
 import { toast } from 'sonner';
-
+import { ExpensesList } from '../components/DashBoardComponents/Home/ExpensesList';
+import { useFetchUserData } from '../hooks/fetchData';
+import AmountCard from '../components/DashBoardComponents/AmountCard';
+import PageHeader from '../components/DashBoardComponents/PageHeader';
 
 const Expenses = (props) => {
-  const [weekExpensesCard, setWeekExpensesCard] = useState(0);
-  const [monthExpensesCard, setMonthExpensesCard] = useState(0);
-  const [balanceCard, setBalanceCard] = useState(0);
-  const [income, setIncome] = useState(0);
-  const [bills, setBills] = useState(0)
+  const {weekExpensesCard, monthExpensesCard, incomeVsExpensesMonth} = useFetchUserData()
 
   const addExpenses = async (formData) => {
     const user = auth.currentUser;
@@ -39,113 +35,13 @@ const Expenses = (props) => {
     }
   };
 
-  //fetch data
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const userId = user.uid;
-    const expensesRef = collection(db, "users", userId, "expenses");
-    const incomeRef = collection(db, "users", userId, "income");
-    const billsRef = collection(db, "users", userId, "bills");
-
-    //expenses
-    const unsubscribeExpenses = onSnapshot(expensesRef, (snapshot) => {
-      const expensesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      const today = new Date();
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay()); 
-      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
-
-      let weeklyTotal = 0;
-      let monthlyTotal = 0;
-      expensesData.forEach((expense) => {
-        const expenseDate = new Date(expense.date);
-        if (expenseDate >= startOfWeek) {
-          weeklyTotal += Number(expense.amount);
-        }
-        if (expenseDate >= startOfMonth) {
-          monthlyTotal += Number(expense.amount);
-        }
-      });
-      setWeekExpensesCard(weeklyTotal);
-      setMonthExpensesCard(monthlyTotal);
-    });
-
-    //income
-    const unsubscribeIncome = onSnapshot(incomeRef, (snapshot) => {
-      const incomeData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      }))
-
-      const today = new Date();
-      const startMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-
-      let monthIncomeTotal = 0;
-      incomeData.forEach((income) => {
-        const incomeDate = new Date(income.date);
-        if (incomeDate >= startMonth) {
-          monthIncomeTotal += Number(income.amount);
-        }
-      });
-      setIncome(monthIncomeTotal)
-    })
-
-    //bills
-    const unsubscribeBills = onSnapshot(billsRef, (snapshot) => {
-      const billsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-  
-      const today = new Date();
-      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  
-      let monthlyBillsTotal = 0;
-      billsData.forEach((bill) => {
-        const billDate = new Date(bill.dueDate);
-        if (billDate >= startOfMonth) {
-          monthlyBillsTotal += Number(bill.amount);
-        }
-      });
-      setBills(monthlyBillsTotal);
-    });
-    setBalanceCard(income - (monthExpensesCard + bills))
-
-    return () => {
-      unsubscribeExpenses();
-      unsubscribeIncome();
-      unsubscribeBills()
-    };  
-  }, [monthExpensesCard]);
-
-
   return (
     <div className="flex justify-center bg-white flex-col">
-      <header className='flex justify-between items-center h-20  pt-5 mx-10'>
-        <h1 className='text-[#00093c] font-[Montserrat] font-bold text-3xl'>Expense</h1>
-        <select 
-          onChange={""}
-          name="duration" 
-          id="duration" 
-          className="w-40 cursor-pointer hover:bg-[#967AFF] text-white py-2 rounded-lg font-bold transition focus:outline-none focus:ring-4 focus:ring-purple-500 bg-[#7f5efd] font-[Montserrat] appearance-none text-center"
-        >
-          <option value="" selected hidden>Select date</option>
-          <option className="text-center" value="week">last 7 days</option>
-          <option className="text-center" value="month">last 30 days</option>
-          <option className="text-center" value="year">last 12 months</option>
-          <option className="text-center" value="allTime">all time</option>
-        </select>
-      </header>
+      <PageHeader name="Expenses"/>
       <div className="flex gap-5 pt-5 mx-10 mb-5">
-        <AmountCard type="Expenses this week" amount={weekExpensesCard} />
-        <AmountCard type="Expenses this month" amount={monthExpensesCard} />
-        <AmountCard type="Income vs Expenses" amount={balanceCard} />
+        <AmountCard type="Expenses this week" subtext="week" amount={weekExpensesCard} />
+        <AmountCard type="Expenses this month" subtext="month" amount={monthExpensesCard} />
+        <AmountCard type="Income vs Expenses" subtext="month" amount={incomeVsExpensesMonth} />
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] max-w-[94.3rem] overflow-scroll">
         <form action={addExpenses} className="h-10 flex justify-around pb-13">
