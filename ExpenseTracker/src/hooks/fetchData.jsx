@@ -12,16 +12,12 @@ export function useFetchUserData() {
   const [incomeVsExpensesWeek, setIncomeVsExpensesWeek] = useState(0)
   const [incomeVsExpensesMonth, setIncomeVsExpensesMonth] = useState(0)
   const [incomeVsExpensesTotal, setIncomeVsExpensesTotal] = useState(0);
-  const [income, setIncome] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0)
   const [weekIncome, setWeekIncome] = useState(0)
   const [monthIncome, setMonthIncome] = useState(0)
   const [billsMonth, setBillsMonth] = useState(0);
   const [billsWeek, setBillsWeek] = useState(0);
   const [billsTotal, setBillsTotal] = useState(0)
- 
-  const [selected, setSelected] = useState("");
-  
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -119,7 +115,6 @@ export function useFetchUserData() {
         }
         totalIncome += Number(income.amount)
       });
-      console.log(totalIncome)
       setTotalIncome(totalIncome)
       setMonthIncome(monthIncomeTotal);
       setWeekIncome(weekIncomeTotal)
@@ -144,18 +139,16 @@ export function useFetchUserData() {
   return {  totalCombineExpenses, 
             weekCombineExpenses, 
             monthCombineExpenses, 
-            incomeVsExpensesWeek, 
             monthIncome, 
             weekIncome, 
+            incomeVsExpensesWeek,
             incomeVsExpensesMonth, 
-            allExpenses, 
             incomeVsExpensesTotal, 
-            totalIncome, 
+            allExpenses, 
             totalIncome, 
             billsMonth,
             billsTotal , 
             billsWeek , 
-            selected, 
             weekExpensesCard, 
             monthExpensesCard };
 }

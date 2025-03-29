@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { useFetchUserData } from '../hooks/fetchData';
 import { BillsList } from "../components/DashBoardComponents/Home/BillsList"
 import { ExpensesListDashboard } from "../components/DashBoardComponents/Home/ExpensesList"
@@ -9,12 +10,59 @@ import PageHeader from '../components/DashBoardComponents/PageHeader';
 const  Home = () => {
   const {totalCombineExpenses, 
          monthCombineExpenses, 
-         weekCombineExpenses, 
+         weekCombineExpenses,
+         incomeVsExpensesWeek,
+         incomeVsExpensesMonth, 
          incomeVsExpensesTotal, 
-         totalIncome, selected} = useFetchUserData()
-  
+         totalIncome,
+         monthIncome, 
+         weekIncome,
+        } = useFetchUserData()
+        const [displayData, setDisplayData] = useState({
+          expense: 0,
+          income: 0,
+          balance: 0,
+          type: "all time", // Default type
+        })
+
+  const setValue = (user) => {
+    try{
+      if(user === "week"){
+        setDisplayData({
+          expense: weekCombineExpenses,
+          income: weekIncome,
+          balance: incomeVsExpensesWeek,
+          type: "last 7 days"
+        })
+      }else if(user === "month"){
+        setDisplayData({
+          expense: monthCombineExpenses,
+          income: monthIncome,
+          balance: incomeVsExpensesMonth,
+          type: "last 30 days"
+        })
+      }else if(user === "allTime"){
+        setDisplayData({
+          expense: totalCombineExpenses,
+          income: totalIncome,
+          balance: incomeVsExpensesTotal,
+          type: "all time"
+        })
+      }
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    setValue("allTime")
+  }, [ weekCombineExpenses, weekIncome, incomeVsExpensesWeek,
+       monthCombineExpenses, monthIncome, incomeVsExpensesMonth,
+       totalCombineExpenses, totalIncome, incomeVsExpensesTotal]);
+
   const handleDate = (e) => {
-    console.log(e.target.value)
+    let userPick = e.target.value
+    setValue(userPick) 
   }
 
   return(
@@ -22,9 +70,9 @@ const  Home = () => {
      <PageHeader name="Dashboard" handleDate={handleDate}/>
      <main className=" h-auto w-100% pl-10 pr-10 pt-5">
         <div className="upperContent flex gap-5">
-          <AmountCard type="Expenses" subtext="all time" amount={totalCombineExpenses}/>
-          <AmountCard type="Income" subtext="all time" amount={totalIncome}/>
-          <AmountCard type="Income vs Expenses" subtext="all time" amount={incomeVsExpensesTotal}/>
+          <AmountCard type="Expenses" subtext={displayData.type} amount={displayData.expense}/>
+          <AmountCard type="Income" subtext={displayData.type} amount={displayData.income}/>
+          <AmountCard type="Income vs Expenses" subtext={displayData.type} amount={displayData.balance}/>
         </div>
         <div className="mainContent flex gap-5 mt-5">
           <div className="container bg-[#f1f1f1] h-100 rounded-xl flex flex-col items-center py-5">
