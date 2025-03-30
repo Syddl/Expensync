@@ -7,7 +7,7 @@ import AmountCard from '../components/DashBoardComponents/AmountCard';
 import PageHeader from '../components/DashBoardComponents/PageHeader';
 
 const Expenses = (props) => {
-  const {weekExpensesCard, monthExpensesCard, incomeVsExpensesMonth} = useFetchUserData()
+  const { weekExpensesCard, monthExpensesCard, incomeVsExpensesMonth } = useFetchUserData()
 
   const addExpenses = async (formData) => {
     const user = auth.currentUser;

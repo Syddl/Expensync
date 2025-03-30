@@ -1,93 +1,74 @@
-import * as React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-import { auth, db } from "../../../firebase"; 
+import { useFetchUserData } from "../../../hooks/fetchData";
 
-export default function ChartsOverview() {
+export default function ChartsOverview({ displayData }) {
+  const { sortedExpense, sortedBills } = useFetchUserData();
   const [chartData, setChartData] = useState([]);
-  const [monthLabels, setMonthLabels] = useState([]);
+  const [labels, setLabels] = useState([]);
 
   useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) return;
+    const allExpenses = [...sortedBills, ...sortedExpense];
+    const today = new Date();
 
-    const userId = user.uid;
-    const expensesRef = collection(db, "users", userId, "expenses");
-    const billsRef = collection(db, "users", userId, "bills");
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
 
-    const unsubscribeExpenses = onSnapshot(expensesRef, (expensesSnapshot) => {
-      const expensesData = expensesSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        amount: Number(doc.data().amount),
-        date: new Date(doc.data().date),
-      }));
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const startOfYear = new Date(today.getFullYear(), 0, 1);
 
-      const unsubscribeBills = onSnapshot(billsRef, (billsSnapshot) => {
-        const billsData = billsSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          amount: Number(doc.data().amount),
-          date: new Date(doc.data().dueDate),
-        }));
+    const expensesMap = new Map();
 
-        // Merge expenses and bills
-        const allExpenses = [...expensesData, ...billsData];
+    allExpenses.forEach((spending) => {
+      const expenseDate = new Date(spending.date);
+      let isValid = false;
 
-        // Get the last 4 months dynamically
-        const today = new Date();
-        const last4Months = [];
-        const monthNames = [];
+      if (displayData.type === "last 7 days" && expenseDate >= startOfWeek) {
+        isValid = true;
+      } else if (displayData.type === "last 30 days" && expenseDate >= startOfMonth) {
+        isValid = true;
+      } else if (displayData.type === "year" && expenseDate >= startOfYear) {
+        isValid = true;
+      } else if (displayData.type === "all time") {
+        isValid = true;
+      }
 
-        for (let i = 3; i >= 0; i--) {
-          const monthDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
-          last4Months.push(monthDate);
-          monthNames.push(monthDate.toLocaleString("default", { month: "long" })); // Get month name
-        }
-
-        setMonthLabels(monthNames); // Update month labels dynamically
-
-        // Group expenses by month and week
-        const groupedData = last4Months.map((monthDate) => {
-          const monthlyExpenses = allExpenses.filter((expense) => {
-            return (
-              expense.date.getFullYear() === monthDate.getFullYear() &&
-              expense.date.getMonth() === monthDate.getMonth()
-            );
-          });
-
-          // Initialize weekly sums
-          const weeklyTotals = [0, 0, 0, 0];
-
-          // Split into 4 weeks
-          monthlyExpenses.forEach((expense) => {
-            const weekNumber = Math.floor((expense.date.getDate() - 1) / 7);
-            weeklyTotals[weekNumber] += expense.amount;
-          });
-
-          return weeklyTotals;
-        });
-
-        setChartData(groupedData);
-      });
-
-      return () => unsubscribeBills();
+      if (isValid) {
+        const label = formatLabel(expenseDate, displayData.type);
+        expensesMap.set(label, (expensesMap.get(label) || 0) + Number(spending.amount));
+      }
     });
 
-    return () => unsubscribeExpenses();
-  }, []);
+    setLabels(Array.from(expensesMap.keys()));
+    setChartData(Array.from(expensesMap.values()));
+  }, [sortedExpense, sortedBills, displayData.type]);
+
+  const formatLabel = (date, type) => {
+    if (type === "last 7 days") {
+      return date.toLocaleDateString("en-US", { weekday: "short", day: "numeric" });
+    } else if (type === "last 30 days") {
+      return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    } else if (type === "year") {
+      return date.toLocaleDateString("en-US", { month: "short" });
+    } else if (type === "all time") {
+      return date.toLocaleDateString("en-US", { year: "numeric" });
+    }
+    return "";
+  };
 
   return (
     <BarChart
       series={[
-        { data: chartData.map((month) => month[0]), label: "1st Week", color: "#00bcd4" },
-        { data: chartData.map((month) => month[1]), label: "2nd Week", color: "#2196f3" },
-        { data: chartData.map((month) => month[2]), label: "3rd Week", color: "#e91e63" },
-        { data: chartData.map((month) => month[3]), label: "4th Week", color: "#673ab7" },
+        {
+          data: chartData,
+          color: "#7f5efd",
+        },
       ]}
       height={400}
       xAxis={[
         {
-          data: monthLabels,
+          data: labels,
           scaleType: "band",
         },
       ]}

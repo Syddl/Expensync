@@ -6,19 +6,26 @@ export function useFetchUserData() {
   const [allExpenses, setAllExpenses] = useState(0);
   const [weekExpensesCard, setWeekExpensesCard] = useState(0);
   const [monthExpensesCard, setMonthExpensesCard] = useState(0);
+
   const [weekCombineExpenses, setWeekCombineExpenses] = useState(0);
   const [monthCombineExpenses, setMonthCombineExpenses] = useState(0);
   const [totalCombineExpenses, setTotalCombineExpenses] = useState(0);
+  
   const [incomeVsExpensesWeek, setIncomeVsExpensesWeek] = useState(0)
   const [incomeVsExpensesMonth, setIncomeVsExpensesMonth] = useState(0)
   const [incomeVsExpensesTotal, setIncomeVsExpensesTotal] = useState(0);
+
   const [totalIncome, setTotalIncome] = useState(0)
   const [weekIncome, setWeekIncome] = useState(0)
   const [monthIncome, setMonthIncome] = useState(0)
+
   const [billsMonth, setBillsMonth] = useState(0);
   const [billsWeek, setBillsWeek] = useState(0);
   const [billsTotal, setBillsTotal] = useState(0)
 
+  const [sortedExpense, setSortedExpense] = useState([])
+  const [sortedBills, setSortedBills] = useState([])
+  
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
@@ -34,10 +41,12 @@ export function useFetchUserData() {
         id: doc.id,
         ...doc.data(),
       }));
+      setSortedExpense(expensesData.sort((a, b) => new Date(b.date) - new Date(a.date)))
 
       const today = new Date();
       const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay()); 
+      startOfWeek.setDate(today.getDate() - today.getDay());
+      startOfWeek.setHours(0, 0, 0, 0);
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
 
       let weeklyTotal = 0;
@@ -65,10 +74,12 @@ export function useFetchUserData() {
         id: doc.id,
         ...doc.data(),
       }));
+      setSortedBills(billsData.sort((a, b) => new Date(b.date) - new Date(a.date)))
 
       const today = new Date();
       const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay()); 
+      startOfWeek.setDate(today.getDate() - today.getDay());
+      startOfWeek.setHours(0, 0, 0, 0);
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
       let weekBills = 0
@@ -99,7 +110,8 @@ export function useFetchUserData() {
 
       const today = new Date();
       const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay()); 
+      startOfWeek.setDate(today.getDate() - today.getDay());
+      startOfWeek.setHours(0, 0, 0, 0);
       const startMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
       let weekIncomeTotal = 0;
@@ -125,6 +137,7 @@ export function useFetchUserData() {
       unsubscribeBills();
       unsubscribeIncome();
     };
+    
   }, []);
 
   useEffect(() => {
@@ -132,7 +145,7 @@ export function useFetchUserData() {
     setMonthCombineExpenses(billsMonth + monthExpensesCard)
     setTotalCombineExpenses(billsTotal + allExpenses);
     setIncomeVsExpensesTotal(totalIncome - (billsTotal + allExpenses));
-    setIncomeVsExpensesWeek(weekIncome - (billsWeek + monthExpensesCard))
+    setIncomeVsExpensesWeek(weekIncome - (billsWeek + weekExpensesCard))
     setIncomeVsExpensesMonth(monthIncome - (billsMonth + monthExpensesCard))
   }, [billsTotal,billsWeek, billsMonth, allExpenses, totalIncome, monthIncome, weekIncome]);
 
@@ -150,5 +163,7 @@ export function useFetchUserData() {
             billsTotal , 
             billsWeek , 
             weekExpensesCard, 
-            monthExpensesCard };
+            monthExpensesCard,
+            sortedExpense,
+            sortedBills };
 }

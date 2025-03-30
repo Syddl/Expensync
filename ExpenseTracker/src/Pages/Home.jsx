@@ -18,12 +18,12 @@ const  Home = () => {
          monthIncome, 
          weekIncome,
         } = useFetchUserData()
-        const [displayData, setDisplayData] = useState({
-          expense: 0,
-          income: 0,
-          balance: 0,
-          type: "all time", // Default type
-        })
+  const [displayData, setDisplayData] = useState({
+    expense: 0,
+    income: 0,
+    balance: 0,
+    type: "all time", // Default type
+  })
 
   const setValue = (user) => {
     try{
@@ -41,6 +41,13 @@ const  Home = () => {
           balance: incomeVsExpensesMonth,
           type: "last 30 days"
         })
+      }else if(user === "year"){
+        setDisplayData({
+          expense: totalCombineExpenses,
+          income: totalIncome,
+          balance: incomeVsExpensesTotal,
+          type: "year"
+        })
       }else if(user === "allTime"){
         setDisplayData({
           expense: totalCombineExpenses,
@@ -55,7 +62,7 @@ const  Home = () => {
   }
 
   useEffect(() => {
-    setValue("allTime")
+    setValue("month")
   }, [ weekCombineExpenses, weekIncome, incomeVsExpensesWeek,
        monthCombineExpenses, monthIncome, incomeVsExpensesMonth,
        totalCombineExpenses, totalIncome, incomeVsExpensesTotal]);
@@ -76,7 +83,7 @@ const  Home = () => {
         </div>
         <div className="mainContent flex gap-5 mt-5">
           <div className="container bg-[#f1f1f1] h-100 rounded-xl flex flex-col items-center py-5">
-            <ChartsOverview />
+            <ChartsOverview displayData={displayData}/>
           </div>
           <div className="container bg-[#f1f1f1] w-185 h-100 rounded-xl p-5">
             <p className="text-[#565857] text-md font-semibold font-[Montserrat] mb-1">Upcoming bills</p>
