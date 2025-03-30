@@ -14,8 +14,24 @@ export default function ChartsOverview({ displayData }) {
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate() - today.getDay());
     startOfWeek.setHours(0, 0, 0, 0);
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate()
 
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    // group days in months into 3
+    // const dateArray = []
+    // let group = []
+    // for(let i = 1; i <= startOfMonth; i++){
+    //   if(group.length <= 10){
+    //     group.push(i)
+    //     if(group.length === 10){
+    //       dateArray.push([...group])
+    //       group = [];
+    //     }
+    //   } 
+    // }
+    // if (group.length > 0) {
+    //   dateArray.push([...group]);
+    // } 
+
     const startOfYear = new Date(today.getFullYear(), 0, 1);
 
     const expensesMap = new Map();
