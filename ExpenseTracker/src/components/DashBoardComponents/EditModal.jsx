@@ -43,7 +43,6 @@ export default function EditModal({ data }) {
       console.error("User is not logged in.");
       return;
     }
-
     try {
       const expenseRef = doc(db, "users", user.uid, "expenses", documentID);
       await updateDoc(expenseRef, formData);

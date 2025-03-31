@@ -40,9 +40,9 @@ export default function ChartsOverview({ displayData }) {
       const expenseDate = new Date(spending.date);
       let isValid = false;
 
-      if (displayData.type === "last 7 days" && expenseDate >= startOfWeek) {
+      if (displayData.type === "week" && expenseDate >= startOfWeek) {
         isValid = true;
-      } else if (displayData.type === "last 30 days" && expenseDate >= startOfMonth) {
+      } else if (displayData.type === "month" && expenseDate >= startOfMonth) {
         isValid = true;
       } else if (displayData.type === "year" && expenseDate >= startOfYear) {
         isValid = true;
@@ -61,9 +61,9 @@ export default function ChartsOverview({ displayData }) {
   }, [sortedExpense, sortedBills, displayData.type]);
 
   const formatLabel = (date, type) => {
-    if (type === "last 7 days") {
+    if (type === "week") {
       return date.toLocaleDateString("en-US", { weekday: "short", day: "numeric" });
-    } else if (type === "last 30 days") {
+    } else if (type === "month") {
       return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
     } else if (type === "year") {
       return date.toLocaleDateString("en-US", { month: "short" });

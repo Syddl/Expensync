@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, getDoc, doc} from "firebase/firestore";
 import { db, auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export function useFetchUserData() {
   const [allExpenses, setAllExpenses] = useState(0);
@@ -166,4 +167,37 @@ export function useFetchUserData() {
             monthExpensesCard,
             sortedExpense,
             sortedBills };
+}
+
+export function userInformation() {
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+  });
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        console.error("No user logged in");
+        return;
+      }
+      const userDocRef = doc(db, "users", user.uid);
+      try {
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+          setUserData({
+            name: docSnap.data().name || "",
+            email: docSnap.data().email || "",
+          });
+        } else {
+          console.error("User document does not exist");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    });
+    return () => unsubscribeAuth();
+  }, []);
+  
+  return userData
 }

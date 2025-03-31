@@ -32,14 +32,14 @@ const  Home = () => {
           expense: weekCombineExpenses,
           income: weekIncome,
           balance: incomeVsExpensesWeek,
-          type: "last 7 days"
+          type: "week"
         })
       }else if(user === "month"){
         setDisplayData({
           expense: monthCombineExpenses,
           income: monthIncome,
           balance: incomeVsExpensesMonth,
-          type: "last 30 days"
+          type: "month"
         })
       }else if(user === "year"){
         setDisplayData({
