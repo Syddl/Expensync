@@ -168,36 +168,3 @@ export function useFetchUserData() {
             sortedExpense,
             sortedBills };
 }
-
-export function userInformation() {
-  const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-  });
-
-  useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        console.error("No user logged in");
-        return;
-      }
-      const userDocRef = doc(db, "users", user.uid);
-      try {
-        const docSnap = await getDoc(userDocRef);
-        if (docSnap.exists()) {
-          setUserData({
-            name: docSnap.data().name || "",
-            email: docSnap.data().email || "",
-          });
-        } else {
-          console.error("User document does not exist");
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    });
-    return () => unsubscribeAuth();
-  }, []);
-  
-  return userData
-}

@@ -92,7 +92,7 @@ export default function ProfileModal() {
     }
   };
 
-  const name = userData.email[0]
+  const name = userData.name[0]
 
   return (
     <div>
@@ -146,11 +146,17 @@ export default function ProfileModal() {
                 disabled={isEdit} 
                 type="text" 
                 id="name" 
+                name="name"
                 className={`${isEdit ? "" : 'border-purple-600 border-2 border-solid'} text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1`}
               />
-              <label className='mb-1 text-[#00093c]'>Email</label>
-              <input value={userData.email} type="email" disabled className='text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1' />
-              
+              <label htmlFor='email' className='mb-1 text-[#00093c]'>Email</label>
+              <input 
+              value={userData.email} 
+                id="email" 
+                name="email" 
+                type="email" 
+                disabled 
+                className='text-gray-700 border-gray-200 rounded-md border-2 p-2 w-90 font-[Montserrat] mb-1' />
               <div className='pt-5 flex gap-2 justify-end'>
                 <button 
                   type="button" 
