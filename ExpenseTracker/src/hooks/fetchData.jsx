@@ -1,27 +1,31 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot, getDoc, doc} from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { onAuthStateChanged } from "firebase/auth";
 
 export function useFetchUserData() {
-  const [allExpenses, setAllExpenses] = useState(0);
   const [weekExpensesCard, setWeekExpensesCard] = useState(0);
   const [monthExpensesCard, setMonthExpensesCard] = useState(0);
+  const [yearExpenses, setYearExpenses] = useState(0)
+  const [allTimeExpenses, setAllTimeExpenses] = useState(0);
 
   const [weekCombineExpenses, setWeekCombineExpenses] = useState(0);
   const [monthCombineExpenses, setMonthCombineExpenses] = useState(0);
+  const [yearlyCombimeExpenses, setYearlyCombineExpenses] = useState(0)
   const [totalCombineExpenses, setTotalCombineExpenses] = useState(0);
   
   const [incomeVsExpensesWeek, setIncomeVsExpensesWeek] = useState(0)
   const [incomeVsExpensesMonth, setIncomeVsExpensesMonth] = useState(0)
+  const [incomeVsExpensesYear, setIncomeVsExpensesYear] = useState(0)
   const [incomeVsExpensesTotal, setIncomeVsExpensesTotal] = useState(0);
 
-  const [totalIncome, setTotalIncome] = useState(0)
   const [weekIncome, setWeekIncome] = useState(0)
   const [monthIncome, setMonthIncome] = useState(0)
+  const [yearIncome, setYearIncome] = useState(0)
+  const [totalIncome, setTotalIncome] = useState(0)
 
   const [billsMonth, setBillsMonth] = useState(0);
   const [billsWeek, setBillsWeek] = useState(0);
+  const [billsYear, setBillsYear] = useState(0)
   const [billsTotal, setBillsTotal] = useState(0)
 
   const [sortedExpense, setSortedExpense] = useState([])
@@ -49,9 +53,11 @@ export function useFetchUserData() {
       startOfWeek.setDate(today.getDate() - today.getDay());
       startOfWeek.setHours(0, 0, 0, 0);
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
+      const startOfYear = new Date(today.getFullYear(), 0, 1);
 
       let weeklyTotal = 0;
       let monthlyTotal = 0;
+      let yearlyTotal = 0
       let totalExpensesAmount = 0;
 
       expensesData.forEach((expense) => {
@@ -59,12 +65,16 @@ export function useFetchUserData() {
         if (expenseDate >= startOfWeek) {
           weeklyTotal += Number(expense.amount);
         }
+        if (expenseDate >= startOfYear) {
+          yearlyTotal += Number(expense.amount);
+        }
         if (expenseDate >= startOfMonth) {
           monthlyTotal += Number(expense.amount);
         }
         totalExpensesAmount += Number(expense.amount)
       });
-      setAllExpenses(totalExpensesAmount)
+      setYearExpenses(yearlyTotal)
+      setAllTimeExpenses(totalExpensesAmount)
       setWeekExpensesCard(weeklyTotal);
       setMonthExpensesCard(monthlyTotal);
     });
@@ -82,9 +92,11 @@ export function useFetchUserData() {
       startOfWeek.setDate(today.getDate() - today.getDay());
       startOfWeek.setHours(0, 0, 0, 0);
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const startOfYear = new Date(today.getFullYear(), 0, 1);
 
       let weekBills = 0
       let monthlyBillsTotal = 0;
+      let yearlyBills = 0;
       let totalBills = 0
 
       billsData.forEach((bill) => {
@@ -92,11 +104,15 @@ export function useFetchUserData() {
         if (billDate >= startOfWeek) {
           weekBills += Number(bill.amount);
         }
+        if (billDate >= startOfYear) {
+          yearlyBills += Number(bill.amount);
+        }
         if (billDate >= startOfMonth) {
           monthlyBillsTotal += Number(bill.amount);
         }
         totalBills = bill.amount
       });
+      setBillsYear(yearlyBills)
       setBillsWeek(weekBills);
       setBillsMonth(monthlyBillsTotal);
       setBillsTotal(totalBills);
@@ -114,24 +130,33 @@ export function useFetchUserData() {
       startOfWeek.setDate(today.getDate() - today.getDay());
       startOfWeek.setHours(0, 0, 0, 0);
       const startMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const startOfYear = new Date(today.getFullYear(), 0, 1);
 
       let weekIncomeTotal = 0;
       let monthIncomeTotal = 0;
       let totalIncome = 0
+      let yearIncome = 0
+
       incomeData.forEach((income) => {
         const incomeDate = new Date(income.date);
         if (incomeDate >= startMonth) {
           monthIncomeTotal += Number(income.amount);
+        }
+        if (incomeDate >= startOfYear) {
+          yearIncome += Number(income.amount);
         }
         if (incomeDate >= startOfWeek) {
           weekIncomeTotal += Number(income.amount);
         }
         totalIncome += Number(income.amount)
       });
+      setYearIncome(yearIncome)
       setTotalIncome(totalIncome)
       setMonthIncome(monthIncomeTotal);
       setWeekIncome(weekIncomeTotal)
     });
+
+    
 
     return () => {
       unsubscribeExpenses();
@@ -139,32 +164,43 @@ export function useFetchUserData() {
       unsubscribeIncome();
     };
     
+    
+
   }, []);
 
   useEffect(() => {
     setWeekCombineExpenses(billsWeek + weekExpensesCard)
     setMonthCombineExpenses(billsMonth + monthExpensesCard)
-    setTotalCombineExpenses(billsTotal + allExpenses);
-    setIncomeVsExpensesTotal(totalIncome - (billsTotal + allExpenses));
+    setTotalCombineExpenses(billsTotal + allTimeExpenses);
+    setYearlyCombineExpenses(billsYear + yearExpenses)
+    setIncomeVsExpensesTotal(totalIncome - (billsTotal + allTimeExpenses));
     setIncomeVsExpensesWeek(weekIncome - (billsWeek + weekExpensesCard))
     setIncomeVsExpensesMonth(monthIncome - (billsMonth + monthExpensesCard))
-  }, [billsTotal,billsWeek, billsMonth, allExpenses, totalIncome, monthIncome, weekIncome]);
+    setIncomeVsExpensesYear(yearIncome - (billsYear + yearlyCombimeExpenses))
+  }, [yearlyCombimeExpenses, yearExpenses, yearIncome, billsYear, billsTotal,billsWeek, billsMonth, allTimeExpenses, totalIncome, monthIncome, weekIncome]);
 
-  return {  totalCombineExpenses, 
-            weekCombineExpenses, 
-            monthCombineExpenses, 
-            monthIncome, 
-            weekIncome, 
-            incomeVsExpensesWeek,
-            incomeVsExpensesMonth, 
-            incomeVsExpensesTotal, 
-            allExpenses, 
-            totalIncome, 
-            billsMonth,
-            billsTotal , 
-            billsWeek , 
-            weekExpensesCard, 
-            monthExpensesCard,
-            sortedExpense,
-            sortedBills };
+  return {  
+    totalCombineExpenses, 
+    weekCombineExpenses, 
+    monthCombineExpenses, 
+    monthIncome, 
+    weekIncome, 
+    incomeVsExpensesWeek,
+    incomeVsExpensesMonth, 
+    incomeVsExpensesTotal, 
+    allTimeExpenses, 
+    totalIncome, 
+    billsMonth,
+    billsTotal , 
+    billsWeek , 
+    weekExpensesCard, 
+    monthExpensesCard,
+    sortedExpense,
+    sortedBills,
+    yearExpenses,
+    yearIncome,
+    yearlyCombimeExpenses,
+    billsYear,
+    incomeVsExpensesYear
+    };
 }

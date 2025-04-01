@@ -3,11 +3,71 @@ import { collection, addDoc, serverTimestamp} from "firebase/firestore";
 import { toast } from 'sonner';
 import { ExpensesList } from '../components/DashBoardComponents/Home/ExpensesList';
 import { useFetchUserData } from '../hooks/fetchData';
+import { useState, useEffect } from 'react'
 import AmountCard from '../components/DashBoardComponents/AmountCard';
 import PageHeader from '../components/DashBoardComponents/PageHeader';
 
-const Expenses = (props) => {
-  const { weekExpensesCard, monthExpensesCard, incomeVsExpensesMonth } = useFetchUserData()
+const Expenses = () => {
+  const {
+    yearlyCombimeExpenses,
+    totalCombineExpenses, 
+    monthCombineExpenses, 
+    weekCombineExpenses,
+    incomeVsExpensesWeek,
+    incomeVsExpensesMonth, 
+    incomeVsExpensesYear,
+    incomeVsExpensesTotal, 
+   } = useFetchUserData()
+  const [displayData, setDisplayData] = useState({
+    expense: 0,
+    balance: 0,
+    type: "all time", // Default type
+  })
+
+  
+
+  const setValue = (user) => {
+    try{
+      if(user === "week"){
+        setDisplayData({
+          expense: weekCombineExpenses,
+          balance: incomeVsExpensesWeek,
+          type: "week"
+        })
+      }else if(user === "month"){
+        setDisplayData({
+          expense: monthCombineExpenses,
+          balance: incomeVsExpensesMonth,
+          type: "month"
+        })
+      }else if(user === "year"){
+        setDisplayData({
+          expense: yearlyCombimeExpenses,
+          balance: incomeVsExpensesYear,
+          type: "year"
+        })
+      }else if(user === "allTime"){
+        setDisplayData({
+          expense: totalCombineExpenses,
+          balance: incomeVsExpensesTotal,
+          type: "all time"
+        })
+      }
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    setValue("month")
+  }, [ weekCombineExpenses, incomeVsExpensesWeek,
+       monthCombineExpenses, incomeVsExpensesMonth,
+       totalCombineExpenses, incomeVsExpensesTotal]);
+
+  const handleDate = (e) => {
+    let userPick = e.target.value
+    setValue(userPick) 
+  }
 
   const addExpenses = async (formData) => {
     const user = auth.currentUser;
@@ -15,7 +75,6 @@ const Expenses = (props) => {
       alert("You need to be logged in to add expenses.");
       return;
     }
-  
     const name = formData.get("itemName");
     const type = formData.get("type");
     const date = formData.get("date");
@@ -37,17 +96,18 @@ const Expenses = (props) => {
 
   return (
     <div className="flex justify-center bg-white flex-col">
-      <PageHeader name="Expenses"/>
+      <PageHeader name="Expenses" handleDate={handleDate}/>
       <div className="flex gap-5 pt-5 mx-10 mb-5">
-        <AmountCard type="Expenses this week" subtext="week" amount={weekExpensesCard} />
-        <AmountCard type="Expenses this month" subtext="month" amount={monthExpensesCard} />
-        <AmountCard type="Income vs Expenses" subtext="month" amount={incomeVsExpensesMonth} />
+        <AmountCard type="Expenses" subtext="week" amount={weekCombineExpenses} />
+        <AmountCard type="Expenses" subtext={displayData.type} amount={displayData.expense} />
+        <AmountCard type="Income vs Expenses" subtext={displayData.type} amount={displayData.balance} />
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] max-w-[94.3rem] overflow-scroll">
         <form action={addExpenses} className="h-10 flex justify-around pb-13">
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Item Name</label>
+            <label htmlFor="name" className="font-[Montserrat] font-semibold text-md mr-5">Item Name</label>
             <input
+              id="name"
               type="text"
               name="itemName"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -56,8 +116,9 @@ const Expenses = (props) => {
             />
           </div>
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Type</label>
+            <label htmlFor="type" className="font-[Montserrat] font-semibold text-md mr-5">Type</label>
             <select
+              id="type"
               name="type"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
               required
@@ -70,8 +131,9 @@ const Expenses = (props) => {
             </select>
           </div>
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Date</label>
+            <label htmlFor="date" className="font-[Montserrat] font-semibold text-md mr-5">Date</label>
             <input
+              id="date"
               type="date"
               name="date"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -79,8 +141,9 @@ const Expenses = (props) => {
             />
           </div>
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Amount</label>
+            <label htmlFor="amount" className="font-[Montserrat] font-semibold text-md mr-5">Amount</label>
             <input
+              id="amount"
               type="number"
               name="amount"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -99,7 +162,7 @@ const Expenses = (props) => {
           <h1 className="w-1/5 text-right">Amount</h1>
           <h1 className="w-1/5 text-right">Modification</h1>
         </div>
-        <ExpensesList/>
+        <ExpensesList displayData={displayData}/>
       </main>
     </div>
   )

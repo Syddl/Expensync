@@ -3,12 +3,82 @@ import { collection, addDoc, serverTimestamp} from "firebase/firestore";
 import { toast } from 'sonner';
 import { BillsListNoLimit } from "../components/DashBoardComponents/Home/BillsList"
 import { useFetchUserData } from '../hooks/fetchData';
+import { useState, useEffect } from 'react'
 import PageHeader from '../components/DashBoardComponents/PageHeader';
 import AmountCard from '../components/DashBoardComponents/AmountCard'
 
 
 const Bills = () => {
-const {billsMonth, billsTotal, billsWeek, monthCombineExpenses, weekCombineExpenses, totalCombineExpenses, monthIncome} = useFetchUserData()
+const {
+    billsMonth,
+    billsWeek,
+    billsYear,
+    billsTotal,
+    weekCombineExpenses,
+    monthCombineExpenses,
+    yearlyCombimeExpenses,
+    totalCombineExpenses,
+    totalIncome,
+    yearIncome,
+    monthIncome, 
+    weekIncome,
+   } = useFetchUserData()
+  const [displayData, setDisplayData] = useState({
+    expense: 0,
+    bills: 0,
+    income: 0,
+    type: "all time", // Default type
+  })
+
+  const setValue = (user) => {
+    try{
+      if(user === "week"){
+        setDisplayData({
+          expense: weekCombineExpenses,
+          bills: billsWeek,
+          income: weekIncome,
+          type: "week"
+        })
+      }else if(user === "month"){
+        setDisplayData({
+          expense: monthCombineExpenses,
+          bills: billsMonth,
+          income: monthIncome,
+          type: "month"
+        })
+      }else if(user === "year"){
+        setDisplayData({
+          expense: yearlyCombimeExpenses,
+          bills: billsYear,
+          income: yearIncome,
+          type: "year"
+        })
+      }else if(user === "allTime"){
+        setDisplayData({
+          expense: totalCombineExpenses,
+          bills: billsTotal,
+          income: totalIncome,
+          type: "all time"
+        })
+      }
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    setValue("month")
+  }, [ 
+        billsWeek , weekIncome, weekCombineExpenses,
+        billsMonth, monthIncome, monthCombineExpenses,
+        billsTotal, totalIncome, totalCombineExpenses,
+        billsYear, yearIncome, yearlyCombimeExpenses
+    ]);
+
+  const handleDate = (e) => {
+    let userPick = e.target.value
+    setValue(userPick) 
+  }
 
 const addBills = async (formData) => {
   const user = auth.currentUser;
@@ -38,17 +108,18 @@ const addBills = async (formData) => {
 
   return(
     <>
-      <PageHeader name="Bills"/>
+      <PageHeader name="Bills" handleDate={handleDate}/>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
-        <AmountCard type="Bills this month" subtext="month" amount={billsMonth}/>
-        <AmountCard type="Spending this month" subtext="month" amount={monthCombineExpenses}/>
-        <AmountCard type="Income" subtext="month" amount={monthIncome}/>
+        <AmountCard type="Bills" subtext={displayData.type} amount={displayData.bills}/>
+        <AmountCard type="Spending" subtext={displayData.type} amount={displayData.expense}/>
+        <AmountCard type="Income" subtext={displayData.type} amount={displayData.income}/>
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll max-w-[94.3rem]">
       <form action={addBills} className="h-10 flex justify-around pb-13">
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Name</label>
+            <label htmlFor="name" className="font-[Montserrat] font-semibold text-md mr-5">Name</label>
             <input
+              id="name"
               type="text"
               name="itemName"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -57,8 +128,9 @@ const addBills = async (formData) => {
             />
           </div>
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Type</label>
+            <label htmlFor="type" className="font-[Montserrat] font-semibold text-md mr-5">Type</label>
             <input
+              id="type"
               type="text"
               name="type"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -67,8 +139,9 @@ const addBills = async (formData) => {
             />
           </div>
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Date</label>
+            <label htmlFor="date" className="font-[Montserrat] font-semibold text-md mr-5">Date</label>
             <input
+              id="date"
               type="date"
               name="date"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -76,8 +149,9 @@ const addBills = async (formData) => {
             />
           </div>
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Amount</label>
+            <label htmlFor="amount" className="font-[Montserrat] font-semibold text-md mr-5">Amount</label>
             <input
+              id="amount"
               type="number"
               name="amount"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"

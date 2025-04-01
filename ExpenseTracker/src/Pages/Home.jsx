@@ -8,13 +8,16 @@ import AmountCard from '../components/DashBoardComponents/AmountCard'
 import PageHeader from '../components/DashBoardComponents/PageHeader';
 
 const  Home = () => {
-  const {totalCombineExpenses, 
+  const {totalCombineExpenses,
+         yearlyCombimeExpenses, 
          monthCombineExpenses, 
          weekCombineExpenses,
          incomeVsExpensesWeek,
          incomeVsExpensesMonth, 
+         incomeVsExpensesYear,
          incomeVsExpensesTotal, 
          totalIncome,
+         yearIncome,
          monthIncome, 
          weekIncome,
         } = useFetchUserData()
@@ -43,9 +46,9 @@ const  Home = () => {
         })
       }else if(user === "year"){
         setDisplayData({
-          expense: totalCombineExpenses,
-          income: totalIncome,
-          balance: incomeVsExpensesTotal,
+          expense: yearlyCombimeExpenses,
+          income: yearIncome,
+          balance: incomeVsExpensesYear,
           type: "year"
         })
       }else if(user === "allTime"){
@@ -63,9 +66,12 @@ const  Home = () => {
 
   useEffect(() => {
     setValue("month")
-  }, [ weekCombineExpenses, weekIncome, incomeVsExpensesWeek,
-       monthCombineExpenses, monthIncome, incomeVsExpensesMonth,
-       totalCombineExpenses, totalIncome, incomeVsExpensesTotal]);
+  }, [ 
+    weekCombineExpenses, weekIncome, incomeVsExpensesWeek,
+    monthCombineExpenses, monthIncome, incomeVsExpensesMonth,
+    totalCombineExpenses, totalIncome, incomeVsExpensesTotal, 
+    yearlyCombimeExpenses, yearIncome, incomeVsExpensesYear
+    ]);
 
   const handleDate = (e) => {
     let userPick = e.target.value

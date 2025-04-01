@@ -48,7 +48,7 @@
         </div>
       )
     }
-
+    
     return(
       <>
         <div className="bg-[#7f5efd] rounded-lg text-white border-5 border-solid border-white h-10 w-[100%] flex justify-between items-center px-3">

@@ -5,9 +5,76 @@ import AmountCard from '../components/DashBoardComponents/AmountCard'
 import PageHeader from '../components/DashBoardComponents/PageHeader'
 import { IncomeList } from "../components/DashBoardComponents/Income"
 import { useFetchUserData } from '../hooks/fetchData'
+import { useState, useEffect } from 'react'
 
 const Income = () => {
-  const {totalIncome, monthIncome, weekIncome, incomeVsExpensesMonth} = useFetchUserData()
+  const {
+    totalCombineExpenses,
+    yearlyCombimeExpenses, 
+    monthCombineExpenses, 
+    weekCombineExpenses,
+    incomeVsExpensesWeek,
+    incomeVsExpensesMonth, 
+    incomeVsExpensesYear,
+    incomeVsExpensesTotal, 
+    totalIncome,
+    yearIncome,
+    monthIncome, 
+    weekIncome,
+    } = useFetchUserData()
+    const [displayData, setDisplayData] = useState({
+      expense: 0,
+      income: 0,
+      balance: 0,
+      type: "all time", // Default type
+    })
+  
+    const setValue = (user) => {
+      try{
+        if(user === "week"){
+          setDisplayData({
+            expense: weekCombineExpenses,
+            income: weekIncome,
+            balance: incomeVsExpensesWeek,
+            type: "week"
+          })
+        }else if(user === "month"){
+          setDisplayData({
+            expense: monthCombineExpenses,
+            income: monthIncome,
+            balance: incomeVsExpensesMonth,
+            type: "month"
+          })
+        }else if(user === "year"){
+          setDisplayData({
+            expense: yearlyCombimeExpenses,
+            income: yearIncome,
+            balance: incomeVsExpensesYear,
+            type: "year"
+          })
+        }else if(user === "allTime"){
+          setDisplayData({
+            expense: totalCombineExpenses,
+            income: totalIncome,
+            balance: incomeVsExpensesTotal,
+            type: "all time"
+          })
+        }
+      }catch(e){
+        console.log(e)
+      }
+    }
+  
+    useEffect(() => {
+      setValue("month")
+    }, [ weekCombineExpenses, weekIncome, incomeVsExpensesWeek,
+         monthCombineExpenses, monthIncome, incomeVsExpensesMonth,
+         totalCombineExpenses, totalIncome, incomeVsExpensesTotal]);
+  
+    const handleDate = (e) => {
+      let userPick = e.target.value
+      setValue(userPick) 
+    }
 
   //push data to database
   const addIncome = async (formData) => {
@@ -37,17 +104,18 @@ const Income = () => {
 
   return(
     <>
-      <PageHeader name="Income"/>
+      <PageHeader name="Income" handleDate={handleDate}/>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
-        <AmountCard type="Income this week" subtext="week" amount={weekIncome}/>
-        <AmountCard type="Income this month" subtext="month" amount={monthIncome}/>
-        <AmountCard type="Income vs Expenses" subtext="month" amount={incomeVsExpensesMonth}/>
+        <AmountCard type="Income" subtext="week" amount={weekIncome}/>
+        <AmountCard type="Income" subtext={displayData.type} amount={displayData.income}/>
+        <AmountCard type="Income vs Expenses" subtext={displayData.type} amount={displayData.balance}/>
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll max-w-[94.3rem]">
       <form action={addIncome} className="h-10 flex justify-around pb-13">
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Source</label>
+            <label htmlFor='source' className="font-[Montserrat] font-semibold text-md mr-5">Source</label>
             <input
+              id='source'
               type="text"
               name="source"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -56,8 +124,9 @@ const Income = () => {
             />
           </div>
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Type</label>
+            <label htmlFor='type' className="font-[Montserrat] font-semibold text-md mr-5">Type</label>
             <input
+              id="type"
               type="text"
               name="type"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -66,8 +135,9 @@ const Income = () => {
             />
           </div>
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Date</label>
+            <label htmlFor='date' className="font-[Montserrat] font-semibold text-md mr-5">Date</label>
             <input
+              id="date"
               type="date"
               name="date"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -75,8 +145,9 @@ const Income = () => {
             />
           </div>
           <div>
-            <label className="font-[Montserrat] font-semibold text-md mr-5">Amount</label>
+            <label htmlFor='amount' className="font-[Montserrat] font-semibold text-md mr-5">Amount</label>
             <input
+              id='amount'
               type="number"
               name="amount"
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"

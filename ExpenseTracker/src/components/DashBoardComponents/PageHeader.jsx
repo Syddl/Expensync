@@ -10,10 +10,10 @@ const PageHeader = (props) => {
         className="w-40 cursor-pointer hover:bg-[#967AFF] text-white py-2 rounded-lg font-bold transition focus:outline-none focus:ring-4 focus:ring-purple-500 bg-[#7f5efd] font-[Montserrat] appearance-none text-center"
       >
         <option defaultValue="Select date" value="default" hidden>Select date</option>
-        <option className="text-center" value="week">last 7 days</option>
-        <option className="text-center" value="month">last 30 days</option>
-        <option className="text-center" value="year">last 12 months</option>
-        <option className="text-center" value="allTime">all time</option>
+        <option className="text-center" value="week">Current Week</option>
+        <option className="text-center" value="month">Current Month</option>
+        <option className="text-center" value="year">Current Year</option>
+        <option className="text-center" value="allTime">All Time</option>
       </select>
     </header>
   )

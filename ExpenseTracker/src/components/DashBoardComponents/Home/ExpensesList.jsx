@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import EditModal from '../EditModal';
 import DeleteModalExpenses from "../DeleteModalExpenses";
 // No limit render
-export const ExpensesList = () => {
+export const ExpensesList = ({displayData}) => {
   const [expenseList, setExpenseList] = useState([]);
   const [loading, setLoading] = useState(true); // Show loading before data loads
 
