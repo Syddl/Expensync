@@ -88,7 +88,7 @@ const  Home = () => {
           <AmountCard type="Income vs Expenses" subtext={displayData.type} amount={displayData.balance}/>
         </div>
         <div className="mainContent flex gap-5 mt-5">
-          <div className="container bg-[#f1f1f1] h-100 rounded-xl flex flex-col items-center py-5">
+          <div className="container bg-[#f1f1f1] h-100 m-w-100 rounded-xl flex flex-col items-center py-5">
             <ChartsOverview displayData={displayData}/>
           </div>
           <div className="container bg-[#f1f1f1] w-185 h-100 rounded-xl p-5">

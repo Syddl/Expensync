@@ -10,7 +10,7 @@ const Content = () => {
     <main className="h-auto w-dvw">
       <Routes>
         <Route path="/" element={<Home />}/>
-        <Route path="/Data" element={<Data />}/>
+        <Route path="/Data/*" element={<Data />}/>
         <Route path="/Income" element={<Income />}/>
         <Route path="/Expenses" element={<Expenses />}/>
         <Route path="/Bills" element={<Bills />}/>

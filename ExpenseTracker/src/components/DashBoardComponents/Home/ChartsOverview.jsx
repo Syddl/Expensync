@@ -76,6 +76,7 @@ export default function ChartsOverview({ displayData }) {
         },
       ]}
       margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+      
     />
   );
 }
