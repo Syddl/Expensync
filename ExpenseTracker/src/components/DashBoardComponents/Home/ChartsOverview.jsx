@@ -8,56 +8,45 @@ export default function ChartsOverview({ displayData }) {
   const [labels, setLabels] = useState([]);
 
   useEffect(() => {
-    const allExpenses = [...sortedBills, ...sortedExpense];
     const today = new Date();
-
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate() - today.getDay());
     startOfWeek.setHours(0, 0, 0, 0);
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const startOfYear = new Date(today.getFullYear(), 0, 1);
-    
-    // group days in months into 3
-    // const dateArray = []
-    // let group = []
-    // for(let i = 1; i <= startOfMonth; i++){
-    //   if(group.length <= 10){
-    //     group.push(i)
-    //     if(group.length === 10){
-    //       dateArray.push([...group])
-    //       group = [];
-    //     }  
-    //   } 
-    // }
-    // if (group.length > 0) {
-    //   dateArray.push([...group]);
-    // } 
-
+  
     const expensesMap = new Map();
-    allExpenses.forEach((spending) => {
-      const expenseDate = new Date(spending.date);
+  
+    const processSpending = (spending, dateKey) => {
+      const expenseDate = new Date(spending[dateKey]);
       let isValid = false;
-
-      if (displayData.type === "week" && expenseDate >= startOfWeek) {
-        isValid = true;
-      } else if (displayData.type === "month" && expenseDate >= startOfMonth) {
-        isValid = true;
-      } else if (displayData.type === "year" && expenseDate >= startOfYear) {
-        isValid = true;
-      } else if (displayData.type === "all time") {
+  
+      if (
+        (displayData.type === "week" && expenseDate >= startOfWeek) ||
+        (displayData.type === "month" && expenseDate >= startOfMonth) ||
+        (displayData.type === "year" && expenseDate >= startOfYear) ||
+        displayData.type === "all time"
+      ) {
         isValid = true;
       }
-
+  
       if (isValid) {
         const label = formatLabel(expenseDate, displayData.type);
         expensesMap.set(label, (expensesMap.get(label) || 0) + Number(spending.amount));
       }
+    };
+  
+    sortedExpense.forEach((spending) => processSpending(spending, "date"));
+    sortedBills.forEach((spending) => processSpending(spending, "dueDate"));
+  
+    // **Sort by Date**
+    const sortedEntries = Array.from(expensesMap.entries()).sort((a, b) => {
+      return new Date(a[0]) - new Date(b[0]);
     });
-
-    setLabels(Array.from(expensesMap.keys()));
-    setChartData(Array.from(expensesMap.values()));
+  
+    setLabels(sortedEntries.map(entry => entry[0]));
+    setChartData(sortedEntries.map(entry => entry[1]));
   }, [sortedExpense, sortedBills, displayData.type]);
-
   const formatLabel = (date, type) => {
     if (type === "week") {
       return date.toLocaleDateString("en-US", { weekday: "short", day: "numeric" });

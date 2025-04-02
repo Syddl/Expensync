@@ -8,10 +8,9 @@ import DeleteModalExpenses from "../DeleteModalExpenses";
 // No limit render
 export const ExpensesList = ({displayData}) => {
   const [expenseList, setExpenseList] = useState([]);
-  const [loading, setLoading] = useState(true); // Show loading before data loads
-
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
-    // Listen for Firebase auth state
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (!user) {
         console.error("No user logged in");
@@ -23,6 +22,7 @@ export const ExpensesList = ({displayData}) => {
       const expensesRef = collection(db, "users", userId, "expenses");
 
       // Firestore Listener for Real-Time Updates
+      const listType = displayData.type
       const unsubscribeFirestore = onSnapshot(expensesRef, (snapshot) => {
         const expensesData = snapshot.docs
           .map((doc) => ({
@@ -31,7 +31,41 @@ export const ExpensesList = ({displayData}) => {
           }))
           .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date (newest first)
 
-        setExpenseList(expensesData);
+        const today = new Date();
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay());
+        startOfWeek.setHours(0, 0, 0, 0);
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
+        const startOfYear = new Date(today.getFullYear(), 0, 1);
+
+        let listWeek = []
+        let listMonth = []
+        let listYear = []
+        expensesData.forEach((expense) => {
+          const expenseDate = new Date(expense.date);
+          if (expenseDate >= startOfWeek) {
+            listWeek.push(expense);
+          }
+          if (expenseDate >= startOfMonth) {
+            listMonth.push(expense);
+          }
+          if (expenseDate >= startOfYear) {
+            listYear.push(expense);  
+          }
+        });
+        if(listType === "week"){
+          setExpenseList(listWeek);
+        }
+        if(listType === "month"){
+          setExpenseList(listMonth);
+        }
+        if(listType === "year"){
+          setExpenseList(listYear);
+        }
+        if(listType === "all time"){
+          setExpenseList(expensesData);
+        }
+        
         setLoading(false);
       });
       // Cleanup the Firestore listener when user logs out
@@ -39,7 +73,7 @@ export const ExpensesList = ({displayData}) => {
     });
     // Cleanup the Auth listener when the component unmounts
     return () => unsubscribeAuth();
-  }, []);
+  }, [displayData]);  
   if (loading) {
     return <p>Loading expenses...</p>;
   }

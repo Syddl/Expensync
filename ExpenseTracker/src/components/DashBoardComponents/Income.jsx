@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import DeleteModalExpenses from './DeleteModalExpenses'
 import IncomeEditModal from './IncomeEditModal'
 
-export const IncomeList = () => {
+export const IncomeList = ({displayData}) => {
   const [incomeList, setIncomeList] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -23,6 +23,7 @@ export const IncomeList = () => {
       const incomeRef = collection(db, "users", userId, "income"); // get the directory of income
   
       // Firestore Listener for Real-Time Updates
+      const listType = displayData.type
       const unsubscribeFirestore = onSnapshot(incomeRef, (snapshot) => {
         const incomeData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -30,7 +31,40 @@ export const IncomeList = () => {
         }))
         .sort((a, b) => new Date(b.date) - new Date(a.date)) // sort user input from recent to old
 
-        setIncomeList(incomeData);
+        const today = new Date();
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay());
+        startOfWeek.setHours(0, 0, 0, 0);
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
+        const startOfYear = new Date(today.getFullYear(), 0, 1);
+
+        let listWeek = []
+        let listMonth = []
+        let listYear = []
+        incomeData.forEach((income) => {
+          const incomeDate = new Date(income.date);
+          if (incomeDate >= startOfWeek) {
+            listWeek.push(income);
+          }
+          if (incomeDate >= startOfMonth) {
+            listMonth.push(income);
+          }
+          if (incomeDate >= startOfYear) {
+            listYear.push(income);  
+          }
+        });
+        if(listType === "week"){
+          setIncomeList(listWeek);
+        }
+        if(listType === "month"){
+          setIncomeList(listMonth);
+        }
+        if(listType === "year"){
+          setIncomeList(listYear);
+        }
+        if(listType === "all time"){
+          setIncomeList(incomeData);
+        }
         setLoading(false);
       });
       // Cleanup the Firestore listener when user logs out
@@ -38,7 +72,7 @@ export const IncomeList = () => {
     });
     // Cleanup the Auth listener when the component unmounts
     return () => unsubscribeAuth();
-  }, []);
+  }, [displayData]);
   if (loading) {
     return <p>Loading expenses...</p>;
   }

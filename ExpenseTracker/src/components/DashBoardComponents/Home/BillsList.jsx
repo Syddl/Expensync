@@ -73,7 +73,7 @@
   }
 
   //no limit 
-  export const BillsListNoLimit = () => {
+  export const BillsListNoLimit = ({displayData}) => {
     const [billsList, setBillsList] = useState([])
     const [loading, setLoading] = useState(true);
 
@@ -90,12 +90,47 @@
         const billsRef = collection(db, "users", userId, "bills");
   
         // Firestore listener
+        let listType = displayData.type
         const unsubscribeFirestore = onSnapshot(billsRef, (snapshot) => {
           const billsData = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           }));
-          setBillsList(billsData);
+
+          const today = new Date();
+          const startOfWeek = new Date(today);
+          startOfWeek.setDate(today.getDate() - today.getDay());
+          startOfWeek.setHours(0, 0, 0, 0);
+          const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
+          const startOfYear = new Date(today.getFullYear(), 0, 1);
+
+          let listWeek = []
+          let listMonth = []
+          let listYear = []
+          billsData.forEach((bills) => {
+            const billsDate = new Date(bills.dueDate);
+            if (billsDate >= startOfWeek) {
+              listWeek.push(bills);
+            }
+            if (billsDate >= startOfMonth) {
+              listMonth.push(bills);
+            }
+            if (billsDate >= startOfYear) {
+              listYear.push(bills);  
+            }
+          });
+          if(listType === "week"){
+            setBillsList(listWeek);
+          }
+          if(listType === "month"){
+            setBillsList(listMonth);
+          }
+          if(listType === "year"){
+            setBillsList(listYear);
+          }
+          if(listType === "all time"){
+            setBillsList(billsData);
+          }
           setLoading(false);
         });
   
@@ -103,7 +138,7 @@
       });
   
       return () => unsubscribeAuth(); 
-    }, []);
+    }, [displayData]);
     if(loading){
       return (
         <div className='flex justify-center'>

@@ -169,7 +169,7 @@ const addBills = async (formData) => {
           <h1 className="w-1/5 text-right">Amount</h1>
           <h1 className="w-1/5 text-right">Modification</h1>
         </div>
-        <BillsListNoLimit/>
+        <BillsListNoLimit displayData={displayData}/>
       </main>
     </>
   )
