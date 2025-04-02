@@ -65,7 +65,7 @@ const  Home = () => {
   }
 
   useEffect(() => {
-    setValue("month")
+    setValue("year")
   }, [ 
     weekCombineExpenses, weekIncome, incomeVsExpensesWeek,
     monthCombineExpenses, monthIncome, incomeVsExpensesMonth,

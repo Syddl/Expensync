@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { collection, onSnapshot, getDoc, doc} from "firebase/firestore";
+import { useState, useEffect, use } from "react";
+import { collection, onSnapshot} from "firebase/firestore";
 import { db, auth } from "../firebase";
 
 export function useFetchUserData() {
@@ -7,6 +7,16 @@ export function useFetchUserData() {
   const [monthExpensesCard, setMonthExpensesCard] = useState(0);
   const [yearExpenses, setYearExpenses] = useState(0)
   const [allTimeExpenses, setAllTimeExpenses] = useState(0);
+
+  const [wantWeekly, setWantWeekly] = useState(0);
+  const [wantMonthly, setWantMonthly] = useState(0);
+  const [wantYearly, setWantYearly] = useState(0);
+  const [wantAllTime, setWantAllTime] = useState(0);
+
+  const [needWeekly, setNeedWeekly] = useState(0);
+  const [needMonthly, setNeedMonthly] = useState(0);
+  const [needYearly, setNeedYearly] = useState(0);
+  const [needAllTime, setNeedAllTime] = useState(0)
 
   const [weekCombineExpenses, setWeekCombineExpenses] = useState(0);
   const [monthCombineExpenses, setMonthCombineExpenses] = useState(0);
@@ -59,21 +69,35 @@ export function useFetchUserData() {
       let monthlyTotal = 0;
       let yearlyTotal = 0
       let totalExpensesAmount = 0;
+      let needWeekly, needMonthly, needYearly, needAllTime = 0;
+      let wantWeekly, wantMonthly, wantYearly, wantAllTime = 0;
 
       expensesData.forEach((expense) => {
         const expenseDate = new Date(expense.date);
         if (expenseDate >= startOfWeek) {
           weeklyTotal += Number(expense.amount);
+          expense.type === "want" ? (wantWeekly += Number(expense.amount)) : (needWeekly += Number(expense.amount));
         }
         if (expenseDate >= startOfYear) {
           yearlyTotal += Number(expense.amount);
+          expense.type === "want" ? (wantYearly += Number(expense.amount)) : (needYearly += Number(expense.amount));
         }
         if (expenseDate >= startOfMonth) {
           monthlyTotal += Number(expense.amount);
+          expense.type === "want" ? (wantMonthly += Number(expense.amount)) : (needMonthly += Number(expense.amount));
         }
         totalExpensesAmount += Number(expense.amount)
+        expense.type === "want" ? (wantAllTime += Number(expense.amount)) : (needAllTime += Number(expense.amount));
       });
-      setYearExpenses(yearlyTotal)
+      setWantWeekly(wantWeekly);
+      setWantMonthly(wantMonthly);
+      setWantYearly(wantYearly);
+      setWantAllTime(wantAllTime);
+      setNeedWeekly(needWeekly);
+      setNeedMonthly(needMonthly);
+      setNeedYearly(needYearly);
+      setNeedAllTime(needAllTime);
+      setYearExpenses(yearlyTotal);
       setAllTimeExpenses(totalExpensesAmount)
       setWeekExpensesCard(weeklyTotal);
       setMonthExpensesCard(monthlyTotal);
@@ -201,6 +225,14 @@ export function useFetchUserData() {
     yearIncome,
     yearlyCombimeExpenses,
     billsYear,
-    incomeVsExpensesYear
+    incomeVsExpensesYear,
+    wantWeekly,
+    wantMonthly,
+    wantYearly,
+    wantAllTime,
+    needWeekly,
+    needMonthly,
+    needYearly,
+    needAllTime
     };
 }

@@ -41,7 +41,7 @@ const ChartCarousel = ({displayData}) => {
       title: 'Wants vs Needs Chart',
       component: () => (
         <div className="w-full h-full flex items-center justify-center text-white">
-          <WantVsNeed />
+          <WantVsNeed displayData={displayData}/>
         </div>
       )
     }
@@ -59,7 +59,7 @@ const ChartCarousel = ({displayData}) => {
           <button
             key={slide.id}
             onClick={() => goToSlide(index)}
-            className={`px-6 py-2 font-semibold rounded-md transition-colors ${
+            className={`cursor-pointer px-6 py-2 font-semibold rounded-md transition-colors ${
               index === activeIndex
                 ? 'bg-[#7f5efd] text-white'
                 : 'bg-purple-200 text-purple-700 hover:bg-purple-300'
