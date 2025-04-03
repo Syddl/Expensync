@@ -40,6 +40,7 @@ export function useFetchUserData() {
 
   const [sortedExpense, setSortedExpense] = useState([])
   const [sortedBills, setSortedBills] = useState([])
+  const [sortedIncome, setSortedIncome] = useState([])
   
   useEffect(() => {
     const user = auth.currentUser;
@@ -148,6 +149,7 @@ export function useFetchUserData() {
         id: doc.id,
         ...doc.data(),
       }));
+      setSortedIncome(incomeData.sort((a, b) => new Date(b.date) - new Date(a.date)))
 
       const today = new Date();
       const startOfWeek = new Date(today);
@@ -233,6 +235,7 @@ export function useFetchUserData() {
     needWeekly,
     needMonthly,
     needYearly,
-    needAllTime
+    needAllTime,
+    sortedIncome
     };
 }

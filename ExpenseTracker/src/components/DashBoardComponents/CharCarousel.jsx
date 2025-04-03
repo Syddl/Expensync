@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ChartsOverview from './Home/ChartsOverview';
+import {ChartsOverviewData} from './Home/ChartsOverview';
 import BalanceChart from './BalanceChart';
-import WantVsNeed from './WantVsNeed';
+import { WantVsNeed } from './WantVsNeed';
 import Savings from './Savings'
 
 const ChartCarousel = ({displayData}) => {
@@ -14,7 +14,7 @@ const ChartCarousel = ({displayData}) => {
       title: 'Expenses Chart',
       component: () => (
         <div className="w-full h-full flex items-center justify-center text-white">
-          <ChartsOverview displayData={displayData} />
+          <ChartsOverviewData displayData={displayData} />
         </div>
       )
     },
@@ -23,7 +23,7 @@ const ChartCarousel = ({displayData}) => {
       title: 'Savings Chart',
       component: () => (
         <div className="w-full h-full flex items-center justify-center text-white">
-          <Savings />
+          <Savings displayData={displayData}/>
         </div>
       )
     },
@@ -32,7 +32,7 @@ const ChartCarousel = ({displayData}) => {
       title: 'Income vs Expense Chart',
       component: () => (
         <div className="w-full h-full flex items-center justify-center text-white">
-          <BalanceChart />
+          <BalanceChart displayData={displayData}/>
         </div>
       )
     },

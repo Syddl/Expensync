@@ -108,7 +108,7 @@ const addBills = async (formData) => {
 
   return(
     <>
-      <PageHeader name="Bills" handleDate={handleDate}/>
+      <PageHeader type="Current Month" name="Bills" handleDate={handleDate}/>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
         <AmountCard type="Bills" subtext={displayData.type} amount={displayData.bills}/>
         <AmountCard type="Spending" subtext={displayData.type} amount={displayData.expense}/>

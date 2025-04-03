@@ -96,7 +96,7 @@ const Expenses = () => {
 
   return (
     <div className="flex justify-center bg-white flex-col">
-      <PageHeader name="Expenses" handleDate={handleDate}/>
+      <PageHeader name="Expenses" type="Current Month" handleDate={handleDate}/>
       <div className="flex gap-5 pt-5 mx-10 mb-5">
         <AmountCard type="Expenses" subtext="week" amount={weekCombineExpenses} />
         <AmountCard type="Expenses" subtext={displayData.type} amount={displayData.expense} />

@@ -104,7 +104,7 @@ const Income = () => {
 
   return(
     <>
-      <PageHeader name="Income" handleDate={handleDate}/>
+      <PageHeader name="Income" type="Current Month" handleDate={handleDate}/>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
         <AmountCard type="Income" subtext="week" amount={weekIncome}/>
         <AmountCard type="Income" subtext={displayData.type} amount={displayData.income}/>

@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom';
 import AmountCard from '../components/DashBoardComponents/AmountCard'
 import PageHeader from '../components/DashBoardComponents/PageHeader';
 import { useFetchUserData } from '../hooks/fetchData';
-import ChartsOverview from '../components/DashBoardComponents/Home/ChartsOverview';
 import ChartCarousel from '../components/DashBoardComponents/CharCarousel';
 
 const Transactions = () => {
@@ -80,7 +78,7 @@ const Transactions = () => {
 
   return(
     <div>
-      <PageHeader name="Statistics" handleDate={handleDate}/>
+      <PageHeader name="Statistics" type="Current Month" handleDate={handleDate}/>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
         <AmountCard  type="Expenses" subtext="week" amount={weekCombineExpenses}/>
         <AmountCard  type="Expenses" subtext={displayData.type} amount={displayData.expense}/>
