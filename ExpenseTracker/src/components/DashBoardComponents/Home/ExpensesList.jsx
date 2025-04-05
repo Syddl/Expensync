@@ -73,9 +73,10 @@ export const ExpensesList = ({displayData}) => {
     });
     // Cleanup the Auth listener when the component unmounts
     return () => unsubscribeAuth();
-  }, [displayData]);  
+  }, [displayData]); 
+
   if (loading) {
-    return <p>Loading expenses...</p>;
+    return <div className="flex justify-center items-center font-semibold"><p>Loading expenses...</p></div>;
   }
   if (expenseList.length === 0) {
     return (
@@ -133,7 +134,7 @@ export const ExpensesList = ({displayData}) => {
 // Has limit to 3
 export const ExpensesListDashboard = () => {
   const [expenseList, setExpenseList] = useState([]);
-  const [loading, setLoading] = useState(true); // Show loading before data loads
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Listen for Firebase auth state

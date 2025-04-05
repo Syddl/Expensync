@@ -65,13 +65,21 @@ const  Home = () => {
   }
 
   useEffect(() => {
-    setValue("year")
-  }, [ 
+    const data = localStorage.getItem("card-home-amount");
+    if (data) {
+      setDisplayData(JSON.parse(data)); // ✅ Parse the string before spreading
+    }
+    setValue("year"); // ✅ Ensure this function is defined
+  }, [
     weekCombineExpenses, weekIncome, incomeVsExpensesWeek,
     monthCombineExpenses, monthIncome, incomeVsExpensesMonth,
     totalCombineExpenses, totalIncome, incomeVsExpensesTotal, 
     yearlyCombimeExpenses, yearIncome, incomeVsExpensesYear
-    ]);
+  ]);
+  
+  useEffect(() => {
+    localStorage.setItem("card-home-amount", JSON.stringify(displayData));
+  }, [displayData]); // ✅ Add dependency array so it only runs when displayData changes
 
   const handleDate = (e) => {
     let userPick = e.target.value
@@ -95,7 +103,7 @@ const  Home = () => {
             <WantVsNeedSmall displayData={displayData}/>
           </div>
         </div>
-        <div className="lowerCotent">
+        <div className="lowerContent">
           <div className="container h-63 bg-[#f1f1f1] rounded-xl mt-5 p-5">
             <div className="flex justify-between items-center px-5">
               <p className="text-[#565857] text-md font-semibold font-[Montserrat] mb-1">Expenses</p>

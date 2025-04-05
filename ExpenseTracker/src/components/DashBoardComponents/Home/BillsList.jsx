@@ -8,8 +8,15 @@
 
   export const BillsList = () => {
 
-    const [billsList, setBillsList] = useState([])
+    const [billsList, setBillsList] = useState(() => {
+      const data = localStorage.getItem("billsList")
+      return data ? JSON.parse(data) : []
+    })
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      localStorage.setItem('billsLIst', JSON.stringify(billsList))
+    }, [billsList])
 
     useEffect(() => {
       const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -39,7 +46,7 @@
     }, []);
       
     if(loading){
-      return <p>Loading bills...</p>
+      return <div className="flex justify-center font-semibold"><p>Loading bills...</p></div>
     }
     if(billsList.length === 0){
       return(

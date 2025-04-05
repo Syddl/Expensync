@@ -3,45 +3,45 @@ import { collection, onSnapshot} from "firebase/firestore";
 import { db, auth } from "../firebase";
 
 export function useFetchUserData() {
-  const [weekExpensesCard, setWeekExpensesCard] = useState(0);
-  const [monthExpensesCard, setMonthExpensesCard] = useState(0);
-  const [yearExpenses, setYearExpenses] = useState(0)
-  const [allTimeExpenses, setAllTimeExpenses] = useState(0);
+  const [weekExpensesCard, setWeekExpensesCard] = useLocalStorage("weekExpenses", 0);
+  const [monthExpensesCard, setMonthExpensesCard] = useLocalStorage("monthExpenses", 0);
+  const [yearExpenses, setYearExpenses] = useLocalStorage("yearExpenses", 0)
+  const [allTimeExpenses, setAllTimeExpenses] = useLocalStorage("allTimeExpenses", 0);
 
-  const [wantWeekly, setWantWeekly] = useState(0);
-  const [wantMonthly, setWantMonthly] = useState(0);
-  const [wantYearly, setWantYearly] = useState(0);
-  const [wantAllTime, setWantAllTime] = useState(0);
+  const [wantWeekly, setWantWeekly] = useLocalStorage("wantWeekly", 0);
+  const [wantMonthly, setWantMonthly] = useLocalStorage("wantMonthly", 0);
+  const [wantYearly, setWantYearly] = useLocalStorage("wantYearly", 0);
+  const [wantAllTime, setWantAllTime] = useLocalStorage("wantAllTime", 0);
 
-  const [needWeekly, setNeedWeekly] = useState(0);
-  const [needMonthly, setNeedMonthly] = useState(0);
-  const [needYearly, setNeedYearly] = useState(0);
-  const [needAllTime, setNeedAllTime] = useState(0)
+  const [needWeekly, setNeedWeekly] = useLocalStorage("needWeekly", 0);
+  const [needMonthly, setNeedMonthly] = useLocalStorage("needMonthly", 0);
+  const [needYearly, setNeedYearly] = useLocalStorage("needYearly", 0);
+  const [needAllTime, setNeedAllTime] = useLocalStorage("needAllTime", 0)
 
-  const [weekCombineExpenses, setWeekCombineExpenses] = useState(0);
-  const [monthCombineExpenses, setMonthCombineExpenses] = useState(0);
-  const [yearlyCombimeExpenses, setYearlyCombineExpenses] = useState(0)
-  const [totalCombineExpenses, setTotalCombineExpenses] = useState(0);
+  const [weekCombineExpenses, setWeekCombineExpenses] = useLocalStorage("weekCombine", 0);
+  const [monthCombineExpenses, setMonthCombineExpenses] = useLocalStorage("monthCombine", 0);
+  const [yearlyCombimeExpenses, setYearlyCombineExpenses] = useLocalStorage("yearCombine", 0)
+  const [totalCombineExpenses, setTotalCombineExpenses] = useLocalStorage("allTimeCombine", 0);
   
-  const [incomeVsExpensesWeek, setIncomeVsExpensesWeek] = useState(0)
-  const [incomeVsExpensesMonth, setIncomeVsExpensesMonth] = useState(0)
-  const [incomeVsExpensesYear, setIncomeVsExpensesYear] = useState(0)
-  const [incomeVsExpensesTotal, setIncomeVsExpensesTotal] = useState(0);
+  const [incomeVsExpensesWeek, setIncomeVsExpensesWeek] = useLocalStorage("weekBalance", 0)
+  const [incomeVsExpensesMonth, setIncomeVsExpensesMonth] = useLocalStorage("monthBalance", 0)
+  const [incomeVsExpensesYear, setIncomeVsExpensesYear] = useLocalStorage("yearBalance", 0)
+  const [incomeVsExpensesTotal, setIncomeVsExpensesTotal] = useLocalStorage("allTimeBalance", 0);
 
-  const [weekIncome, setWeekIncome] = useState(0)
-  const [monthIncome, setMonthIncome] = useState(0)
-  const [yearIncome, setYearIncome] = useState(0)
-  const [totalIncome, setTotalIncome] = useState(0)
+  const [weekIncome, setWeekIncome] = useLocalStorage("weekIncome",0)
+  const [monthIncome, setMonthIncome] = useLocalStorage("monthIncome", 0)
+  const [yearIncome, setYearIncome] = useLocalStorage("yearIncome", 0)
+  const [totalIncome, setTotalIncome] = useLocalStorage("allTimeIncome", 0)
 
-  const [billsMonth, setBillsMonth] = useState(0);
-  const [billsWeek, setBillsWeek] = useState(0);
-  const [billsYear, setBillsYear] = useState(0)
-  const [billsTotal, setBillsTotal] = useState(0)
+  const [billsMonth, setBillsMonth] = useLocalStorage("monthBills", 0);
+  const [billsWeek, setBillsWeek] = useLocalStorage("weekBills", 0);
+  const [billsYear, setBillsYear] = useLocalStorage("yearBills", 0)
+  const [billsTotal, setBillsTotal] = useLocalStorage("totalBills", 0)
 
-  const [sortedExpense, setSortedExpense] = useState([])
-  const [sortedBills, setSortedBills] = useState([])
-  const [sortedIncome, setSortedIncome] = useState([])
-  
+  const [sortedExpense, setSortedExpense] = useLocalStorage("sortedExpense", [])
+  const [sortedBills, setSortedBills] = useLocalStorage("sortedBills", [])
+  const [sortedIncome, setSortedIncome] = useLocalStorage("sortedIncome", [])
+
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
@@ -204,6 +204,31 @@ export function useFetchUserData() {
     setIncomeVsExpensesMonth(monthIncome - (billsMonth + monthExpensesCard))
     setIncomeVsExpensesYear(yearIncome - (billsYear + yearlyCombimeExpenses))
   }, [yearlyCombimeExpenses, yearExpenses, yearIncome, billsYear, billsTotal,billsWeek, billsMonth, allTimeExpenses, totalIncome, monthIncome, weekIncome]);
+
+  function useLocalStorage(key, initialValue) {
+    const [storedValue, setStoredValue] = useState(() => {
+      try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : initialValue;
+      } catch (e) {
+        console.warn(`Error reading localStorage key "${key}":`, e);
+        return initialValue;
+      }
+    });
+  
+    const setValue = (value) => {
+      try {
+        // If value is a function, use the function form of setState
+        const valueToStore = value instanceof Function ? value(storedValue) : value;
+        setStoredValue(valueToStore);
+        localStorage.setItem(key, JSON.stringify(valueToStore));
+      } catch (error) {
+        console.warn(`Error writing to localStorage key "${key}":`, error);
+      }
+    };
+    
+    return [storedValue, setValue];
+  }
 
   return {  
     totalCombineExpenses, 

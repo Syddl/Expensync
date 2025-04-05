@@ -74,7 +74,7 @@ export const IncomeList = ({displayData}) => {
     return () => unsubscribeAuth();
   }, [displayData]);
   if (loading) {
-    return <p>Loading expenses...</p>;
+    return <div  className="flex justify-center items-center font-semibold"><p>Loading expenses...</p></div>;
   }
   if (incomeList.length === 0) {
     return (
