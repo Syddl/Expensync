@@ -14,7 +14,7 @@ const Benefits = () => {
   })
 
   return(
-    <section className="w-full h-auto mt-10 flex justify-center">
+    <section className="w-full h-auto flex justify-center">
       <div className="listOfBenefits">
         {renderData}
       </div>

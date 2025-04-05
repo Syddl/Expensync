@@ -8,8 +8,8 @@ export function useFetchUserData() {
   const [yearExpenses, setYearExpenses] = useLocalStorage("yearExpenses", 0)
   const [allTimeExpenses, setAllTimeExpenses] = useLocalStorage("allTimeExpenses", 0);
 
-  const [wantWeekly, setWantWeekly] = useLocalStorage("wantWeekly", 0);
-  const [wantMonthly, setWantMonthly] = useLocalStorage("wantMonthly", 0);
+  const [wantWeekly, setWantWeekly] = useState(0);
+  const [wantMonthly, setWantMonthly] = useState(0);
   const [wantYearly, setWantYearly] = useLocalStorage("wantYearly", 0);
   const [wantAllTime, setWantAllTime] = useLocalStorage("wantAllTime", 0);
 
