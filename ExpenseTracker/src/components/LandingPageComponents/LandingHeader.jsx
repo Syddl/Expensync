@@ -8,6 +8,7 @@ const LandingHeader = () => {
       sm:h-25 sm:mt-1
       md:mt-1
       lg:h-20 lg:mt-0
+      xs:h-25
       '/>
       <div className="hidden lg:block">
         <Link to="/Login">

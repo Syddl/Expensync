@@ -23,6 +23,7 @@ const Expenses = () => {
     balance: 0,
     type: "all time", // Default type
   })
+  const [isOther, setIsOther] = useState(true);
 
   
 
@@ -89,10 +90,17 @@ const Expenses = () => {
         createdAt: serverTimestamp(),
       });
       toast.success("Expense added successfully!")
+      setIsOther(prev => !prev)
     } catch (error) {
       console.error("Error adding expense:", error.message);
     }
   };
+
+  const selectChange = (e) => {
+    if(e.target.value === "other"){
+      setIsOther(prev => !prev)
+    }
+  }
 
   return (
     <div className="flex justify-center bg-white flex-col">
@@ -117,9 +125,10 @@ const Expenses = () => {
           </div>
           <div>
             <label htmlFor="type" className="font-[Montserrat] font-semibold text-md mr-5">Type</label>
-            <select
+            { isOther ? <select
               id="type"
               name="type"
+              onChange={selectChange}
               className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
               required
             >
@@ -128,7 +137,10 @@ const Expenses = () => {
               </option>
               <option value="need">Need</option>
               <option value="want">Want</option>
-            </select>
+              <option value="other">Other</option>
+            </select> :
+            <input type="text" id="type" name="type" className="w-50 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"/>
+            }
           </div>
           <div>
             <label htmlFor="date" className="font-[Montserrat] font-semibold text-md mr-5">Date</label>
