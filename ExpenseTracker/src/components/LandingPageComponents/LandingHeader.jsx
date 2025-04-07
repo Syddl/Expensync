@@ -4,11 +4,11 @@ import Logo from '../../assets/ExpenSync-Logo.svg'
 const LandingHeader = () => {
   return(
     <header className='bg-[#f4edff] w-full  flex justify-around items-center absolute'>
-      <img src={Logo} alt="ExpenSync-Logo" className='w-auto h-20 cursor-pointer 
+      <img src={Logo} alt="ExpenSync-Logo" className='w-auto  cursor-pointer 
       sm:h-25 sm:mt-1
       md:mt-1
       lg:h-20 lg:mt-0
-      xs:h-25
+      h-25
       '/>
       <div className="hidden lg:block">
         <Link to="/Login">
