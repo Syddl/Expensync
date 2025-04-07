@@ -12,7 +12,7 @@ const BenefitsCard = (props) => {
     lg:w-210 lg:h-85 lg:rounded-[30px] lg:gap-13 lg:px-20 lg:my-10  lg:py-5 
     md:w-170 md:h-75 md:rounded-[20px] md:gap-13 md:px-15 md:my-10  md:py-5 
     sm:w-145 sm:h-65 sm:rounded-[15px] sm:gap-13 sm:px-10 sm:my-10  sm:py-5 
-    w-90 h-40 rounded-[10px] gap-5 px-5 my-5
+    w-80 h-35 rounded-[10px] gap-5 px-5 my-5
     ">
       <img src={props.img.src} alt={props.img.alt} className={`order-${order2}
         2xl:w-85 2xl:h-85 
@@ -20,7 +20,7 @@ const BenefitsCard = (props) => {
         lg:w-70 lg:h-70
         md:w-65 md:h-65
         sm:w-55 sm:h-55
-        w-35 h-35
+        w-30 h-30
       `}/>
       <div className={`details w-[600px] order-${order1}`}>
         <h1 className="text-[#00093c] font-bold font-[Montserrat] 
@@ -29,7 +29,7 @@ const BenefitsCard = (props) => {
         lg:text-3xl lg:mb-2
         md:text-2xl md:mb-2
         sm:text-2xl sm:mb-2
-        text-sm mb-2
+        text-[12px] mb-2
         ">{props.title}</h1>
         <p className="text-[#00093c] font-[Montserrat] 
         2xl:text-2xl 2xl:mb-3
@@ -37,7 +37,7 @@ const BenefitsCard = (props) => {
         lg:text-lg lg:mb-2
         md:text-md md:mb-2
         sm:text-sm sm:mb-2
-        text-[9px] mb-2
+        text-[7px] mb-2
         ">{props.text}</p>
         <Link to="/Login">
         <button type="button" className=" font-semibold text-center text-white bg-[#7f5efd] hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 rounded-full  dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 cursor-pointer
@@ -46,7 +46,7 @@ const BenefitsCard = (props) => {
         lg:text-md lg:w-[120px] lg:h-[40px]
         md:text-md md:w-[120px] md:h-[40px]
         sm:text-sm sm:w-[100px] sm:h-[40px]
-        text-[10px] w-[80px] h-[30px]
+        text-[10px] w-[70px] h-[25px]
         ">Get started</button>
         </Link> 
       </div>

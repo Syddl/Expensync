@@ -15,7 +15,7 @@ const   Footer = () => {
     xl:h-110
     lg:h-110
     sm:h-150 
-    h-150 
+    h-auto 
     ">
       <div className="container flex text-white font-[Montserrat] item 
       2xl:w-[70%] 2xl:m-20 2xl:flex-row 2xl:items-start 2xl:justify-center
@@ -27,20 +27,18 @@ const   Footer = () => {
         <div className="personalInfo justify-center items-center
         2xl:mr-25
         xl:mr-25 
-        lg:mr-25 
+        lg:mr-25 lg:mb-0
         sm:mr-0 
+        mb-10
         ">
           <h1 className=" flex font-[Montserrat]
           lg:mt-0 lg:text-3xl lg:font-bold lg:mb-5 
           sm:mb-15 sm:mt-18 sm:font-semibold sm:text-6xl sm:justify-center sm:items-center
-          mb-15 mt-18 font-semibold text-6xl justify-center items-center
+          mb-5 mt-5 font-semibold text-6xl justify-center items-center
           ">Sydd</h1>
-          <div className="flex 
-          2xl:mr-10
-          xl:mr-10
-          lg:mr-10
-          sm:mr-0 sm:gap-5 sm:mb-15
-          mr-0 gap-5 mb-15
+          <div className="flex justify-center
+          sm:gap-5 
+          gap-5
           ">
             {Social.map((media, index) => (
               <img src={media} key={index} className='cursor-pointer
@@ -54,12 +52,12 @@ const   Footer = () => {
           </div>
         </div>
         <div className="discover lg:mr-25 sm:0">
-          <h1 className=" pb-10
-          2xl:text-2xl  
-          xl:text-2xl  
-          lg:text-2xl lg:font-bold
-          sm:text-4xl 
-          text-4xl 
+          <h1 className="
+          2xl:text-2xl 2xl:pb-10
+          xl:text-2xl xl:pb-10
+          lg:text-2xl lg:font-bold lg:pb-10
+          sm:text-4xl sm:pb-10
+          text-4xl pb-5
           ">Discover</h1>
           <ul>
             {discover.map((data, index) => <li key={index}className="hidden font-light cursor-pointer leading-[40px] font-[Montserrat]
@@ -77,11 +75,11 @@ const   Footer = () => {
         lg:mr-25
         sm:mr-0
         ">
-        <h1 className=" pb-10
-        2xl:text-2xl 
-        xl:text-2xl 
-        lg:text-2xl lg:font-bold
-        sm:text-4xl 
+        <h1 className=" pb-5
+        2xl:text-2xl 2xl:pb-10
+        xl:text-2xl  xl:pb-10
+        lg:text-2xl lg:font-bold lg:pb-10
+        sm:text-4xl sm:pb-10
         text-4xl 
         ">Company</h1>
           <ul>
@@ -94,12 +92,12 @@ const   Footer = () => {
           </ul>
         </div>
         <div className="lg:mr-25 sm:mr-0">
-        <h1 className="pb-19
-        2xl:text-2xl
-        xl:text-2xl
-        lg:text-2xl lg:font-bold
+        <h1 className="
+        2xl:text-2xl 2xl:pb-10
+        xl:text-2xl xl:pb-10
+        lg:text-2xl lg:font-bold lg:pb-10
         sm:text-4xl 
-        text-4xl 
+        text-4xl pb-5
         ">Help</h1>
           <ul>
           {help.map((data, index) => <li key={index} className="hidden cursor-pointer leading-[40px] font-[Montserrat] font-light

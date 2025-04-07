@@ -12,28 +12,28 @@ const LandingHome = () => {
       lg:flex-row lg:mr-15 lg:ml-15
       2xl:mr-0 2xl:ml-0 
       xl:mr-25 xl:ml-25 ">
-        <div className="textContent flex flex-col gap-2
-        lg:items-start lg:mr-10
-        items-center 
-        sm:items-center sm:w-150
-        md:items-center  
-        2xl:mr-40
-        xl:mr-30 ">
+        <div className="textContent flex flex-col 
+        lg:items-start lg:mr-10 lg:gap-7
+        items-center gap-5
+        sm:items-center sm:w-150 sm:gap-5
+        md:items-center  md:gap-5
+        2xl:mr-40 2xl:gap-7
+        xl:mr-30 xl:gap-7">
           <h1 className=' font-[Montserrat] font-bold text-[#00093c]
           2xl:text-6xl 2xl:mx-0
           xl:text-6xl xl:mx-0
           lg:text-5xl lg:text-left  lg:mx-0
           md:text-5xl md:mx-0
           sm:text-center sm:text-5xl sm:mx-0
-          text-center text-3xl mx-2
+          text-center text-2xl mx-2
           '>Track Your Expenses & Stay on Top of Your Budget</h1>
           <p className='font-[Montserrat]  text-[#00093c] text-valance
-          2xl:text-2xl 2xl:mb-7 2xl:mx-0
-          xl:text-2xl xl:mb-7 xl:mx-0
-          lg:text-[21px] lg:text-start lg:mb-7 lg:mx-0
-          sm:text-center sm:text-2xl sm:mb-7 sm:mx-0
-          text-center text-md mb-2 mx-2
-          md:text-2xl md:mb-7 md:mx-0
+          2xl:text-2xl 2xl:mx-0
+          xl:text-2xl xl:mx-0
+          lg:text-[21px] lg:text-start  lg:mx-0
+          sm:text-center sm:text-2xl sm:mx-0
+          text-center text-sm  mx-2
+          md:text-2xl  md:mx-0
           '>Effortlessly monitor your spending and get a clear breakdown of your expenses every month. Stay in control of your finances.</p>
           
           <Link to="/Login">
@@ -54,7 +54,7 @@ const LandingHome = () => {
           lg:h-auto lg:w-auto lg:mb-0  lg:mt-0
           md:h-110 md:w-110 md:mb-10 md:mt-0
           sm:h-110 sm:w-110 sm:mb-10 sm:mt-0
-          h-80 w-80 mt-18
+          h-70 w-70 mt-5
           '/>
         </div>
       </div>
