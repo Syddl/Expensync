@@ -37,8 +37,11 @@ const SideBar = () => {
   }, [userData]);
 
   return(
-    <aside className="bg-[#F8F9FA] h-screen w-100">
-      <main className='pl-5 pr-5 pt-7 pb-7'>
+    <aside className="bg-[#F8F9FA] h-screen 
+    lg:w-100
+    w-0
+    ">
+      <main className='hidden lg:block pl-5 pr-5 pt-7 pb-7'>
         <div className="UpperName flex items-center gap-3 mb-6">
           <img src={Logo} alt="logo" className='w-12 h-12 '/>
           <h1 className=' font-medium text-2xl text-[#00093c]'>ExpenSync</h1>

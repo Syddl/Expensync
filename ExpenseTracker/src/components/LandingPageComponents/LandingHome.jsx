@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import HomeImg from '../../assets/SaveImg.svg'
 
 
-const LandingHome = () => {
+const   LandingHome = () => {
   return(
     <section className=" bg-[#f4edff] h-screen flex justify-center  w-screen">
       <div className="gap-10 HomeContent justify-center items-center flex 

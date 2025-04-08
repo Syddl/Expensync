@@ -89,14 +89,30 @@ const  Home = () => {
   return(
     <>
      <PageHeader name="Dashboard" type="Current Year" handleDate={handleDate}/>
-     <main className=" h-auto w-100% pl-10 pr-10 pt-5">
-        <div className="upperContent flex gap-5">
-          <AmountCard type="Expenses" subtext={displayData.type} amount={displayData.expense}/>
-          <AmountCard type="Income" subtext={displayData.type} amount={displayData.income}/>
-          <AmountCard type="Income vs Expenses" subtext={displayData.type} amount={displayData.balance}/>
+     <main className=" h-auto w-100% 
+     lg:pl-10 lg:pr-10 lg:pt-5">
+        <div className="upperContent flex justify-center lg:gap-5 gap-1">
+          <AmountCard 
+            type="Expenses" 
+            subtext={displayData.type} 
+            amount={displayData.expense}
+          />
+          <AmountCard 
+            type="Income" 
+            subtext={displayData.type} 
+            amount={displayData.income}
+          />
+          <AmountCard 
+            type="Income vs Expenses" 
+            subtext={displayData.type} 
+            amount={displayData.balance}
+          />
         </div>
-        <div className="mainContent flex gap-5 mt-5">
-          <div className="container bg-[#f1f1f1] h-100 w-250 rounded-xl flex flex-col items-center py-5">
+        <div className="mainContent flex gap-5 mt-5 
+        lg:flex-row
+        flex-col">
+          <div className="container bg-[#f1f1f1] rounded-xl  items-center
+          lg:h-100 lg:w-250 lg:py-2">
             <ChartsOverview displayData={displayData}/>
           </div>
           <div className="flex justify-center items-center container bg-[#f1f1f1] w-122 h-100 rounded-xl p-5">
