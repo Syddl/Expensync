@@ -43,7 +43,9 @@ const LogIn = () => {
 
   return (
     <div className='flex h-screen'>
-      <div className='w-[60%] flex justify-center items-center'>
+      <div className='flex justify-center items-center
+      2xl:w-[60%]
+      w-screen '>
         <form onSubmit={handleLogin} className="FormContainer w-120 flex flex-col items-center">
           <div className="greeting flex flex-col items-center mb-10">
             <Link to="/">
@@ -86,15 +88,17 @@ const LogIn = () => {
           </p>
         </form>
       </div>
-      <div className="text bg-gradient-to-t from-purple-400 via-purple-400 to-violet-500 w-[40%] flex justify-center items-center">
-        <div className="w-100">
-          <h1 className='font-bold text-white text-3xl text-center mb-2'>"Track your expenses effortlessly and stay in control!"</h1>
-          <p className='text-center text-white'>
-            Simplify your finances with ease! Log in to manage, track, and optimize your spending—all in one place.
-            Your financial journey starts here!
-          </p>
+        <div className="hidden lg:block text bg-gradient-to-t from-purple-400 via-purple-400 to-violet-500 w-[40%] ">
+          <div className="w-[100%] h-[100%] flex items-center justify-center">
+            <div className='w-100'>
+              <h1 className='font-bold text-white text-3xl text-center mb-2'>"Track your expenses effortlessly and stay in control!"</h1>
+              <p className='text-center text-white'>
+                Simplify your finances with ease! Log in to manage, track, and optimize your spending—all in one place.
+                Your financial journey starts here!
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
     </div>
   );
 }
