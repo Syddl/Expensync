@@ -80,9 +80,9 @@ const Transactions = () => {
     <div>
       <PageHeader name="Statistics" type="Current Month" handleDate={handleDate}/>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
-        <AmountCard  type="Expenses" subtext="week" amount={weekCombineExpenses}/>
-        <AmountCard  type="Expenses" subtext={displayData.type} amount={displayData.expense}/>
-        <AmountCard  type="Income vs Expenses" subtext={displayData.type} amount={displayData.balance}/>
+        <AmountCard  type="Expenses" subtext="week" amount={weekCombineExpenses.toFixed(2)}/>
+        <AmountCard  type="Expenses" subtext={displayData.type} amount={displayData.expense.toFixed(2)}/>
+        <AmountCard  type="Income vs Expenses" subtext={displayData.type} amount={displayData.balance.toFixed(2)}/>
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl h-168 flex flex-col items-center max-w-[94.3rem]" >
         <ChartCarousel displayData={displayData}/>

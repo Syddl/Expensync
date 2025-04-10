@@ -110,9 +110,9 @@ const addBills = async (formData) => {
     <>
       <PageHeader type="Current Month" name="Bills" handleDate={handleDate}/>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
-        <AmountCard type="Bills" subtext={displayData.type} amount={displayData.bills}/>
-        <AmountCard type="Spending" subtext={displayData.type} amount={displayData.expense}/>
-        <AmountCard type="Income" subtext={displayData.type} amount={displayData.income}/>
+        <AmountCard type="Bills" subtext={displayData.type} amount={displayData.bills.toFixed(2)}/>
+        <AmountCard type="Spending" subtext={displayData.type} amount={displayData.expense.toFixed(2)}/>
+        <AmountCard type="Income" subtext={displayData.type} amount={displayData.income.toFixed(2)}/>
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll max-w-[94.3rem]">
       <form action={addBills} className="h-10 flex justify-around pb-13">

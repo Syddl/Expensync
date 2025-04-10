@@ -106,9 +106,9 @@ const Income = () => {
     <>
       <PageHeader name="Income" type="Current Month" handleDate={handleDate}/>
       <div className='flex gap-5  pt-5 mx-10 mb-5'>
-        <AmountCard type="Income" subtext="week" amount={weekIncome}/>
-        <AmountCard type="Income" subtext={displayData.type} amount={displayData.income}/>
-        <AmountCard type="Income vs Expenses" subtext={displayData.type} amount={displayData.balance}/>
+        <AmountCard type="Income" subtext="week" amount={weekIncome.toFixed(2)}/>
+        <AmountCard type="Income" subtext={displayData.type} amount={displayData.income.toFixed(2)}/>
+        <AmountCard type="Income vs Expenses" subtext={displayData.type} amount={displayData.balance.toFixed(2)}/>
       </div>
       <main className="container bg-[#f1f1f1] auto mx-10 p-5 rounded-2xl max-h-[42rem] overflow-scroll max-w-[94.3rem]">
       <form action={addIncome} className="h-10 flex justify-around pb-13">

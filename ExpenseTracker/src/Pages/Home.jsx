@@ -95,17 +95,17 @@ const  Home = () => {
           <AmountCard 
             type="Expenses" 
             subtext={displayData.type} 
-            amount={displayData.expense}
+            amount={displayData.expense.toFixed(2)}
           />
           <AmountCard 
             type="Income" 
             subtext={displayData.type} 
-            amount={displayData.income}
+            amount={displayData.income.toFixed(2)}
           />
           <AmountCard 
             type="Income vs Expenses" 
             subtext={displayData.type} 
-            amount={displayData.balance}
+            amount={displayData.balance.toFixed(2)}
           />
         </div>
         <div className="mainContent flex gap-5 mt-5 
