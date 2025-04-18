@@ -90,7 +90,7 @@ const Expenses = () => {
         createdAt: serverTimestamp(),
       });
       toast.success("Expense added successfully!")
-      setIsOther(prev => !prev)
+      !isOther ? setIsOther(prev => !prev) : setIsOther(true)
     } catch (error) {
       console.error("Error adding expense:", error.message);
     }
