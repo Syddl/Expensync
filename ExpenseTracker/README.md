@@ -291,16 +291,4 @@ If you encounter any issues or have questions:
 **Made with ❤️ by [Syddl](https://github.com/Syddl)**
 
 </div>
-```
 
-This comprehensive README.md file includes:
-
-- **Professional Design**: Clean layout with proper formatting and visual elements
-- **Tech Stack Icons**: Badge-style icons for all technologies used
-- **Detailed Sections**: Complete project information, features, and usage instructions
-- **Installation Guide**: Step-by-step setup instructions
-- **Project Structure**: Clear overview of the codebase organization
-- **Contributing Guidelines**: Instructions for potential contributors
-- **Professional Formatting**: Tables, code blocks, and visual hierarchy
-
-The README follows best practices for open-source projects and provides all the essential information users and contributors need to understand and work with your ExpenseTracker application [^1].
