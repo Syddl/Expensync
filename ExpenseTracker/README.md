@@ -1,6 +1,6 @@
 <div align="center">
 
-# 💰 ExpenseTracker
+# 💰 ExpenSync
 
 ### A Modern Personal Finance Management Application
 
