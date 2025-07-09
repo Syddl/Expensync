@@ -8,7 +8,7 @@
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
@@ -78,7 +78,7 @@
 |------------|---------|---------|
 | ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB) | UI Framework | ^18.0.0 |
 | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) | Programming Language | ES6+ |
-| ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white) | Styling | CSS3 |
+| ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white) | Styling & UI Framework | ^3.0.0 |
 | ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) | Markup | HTML5 |
 
 ### Build Tools & Development
@@ -194,4 +194,113 @@ npm run preview
 
 ```
 ExpenseTracker/
-├── public/                
+├── public/                 # Static assets
+│   ├── favicon.ico
+│   └── index.html
+├── src/                    # Source code
+│   ├── components/         # React components
+│   ├── styles/            # Tailwind CSS & custom styles
+│   ├── utils/             # Utility functions
+│   ├── hooks/             # Custom React hooks
+│   ├── context/           # React context providers
+│   └── App.jsx            # Main application component
+├── package.json           # Project dependencies
+├── vite.config.js         # Vite configuration
+├── eslint.config.js       # ESLint configuration
+├── vercel.json           # Vercel deployment config
+└── README.md             # Project documentation
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions to ExpenseTracker! Here's how you can help:
+
+### How to Contribute
+
+1. **Fork the Repository**
+   ```bash
+   git fork https://github.com/Syddl/Expensync.git
+   ```
+
+2. **Create a Feature Branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+
+3. **Make Your Changes**
+   - Write clean, documented code
+   - Follow existing code style
+   - Add tests if applicable
+
+4. **Commit Your Changes**
+   ```bash
+   git commit -m 'Add some amazing feature'
+   ```
+
+5. **Push to Your Branch**
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+
+6. **Open a Pull Request**
+   - Provide a clear description of changes
+   - Reference any related issues
+
+### Development Guidelines
+
+- Follow React best practices
+- Use Tailwind CSS utility classes consistently
+- Follow Tailwind CSS best practices for responsive design
+- Write meaningful commit messages
+- Test your changes thoroughly
+- Update documentation as needed
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **React Team** - For the amazing React framework
+- **Vite Team** - For the lightning-fast build tool
+- **Vercel** - For seamless deployment platform
+- **Open Source Community** - For inspiration and resources
+
+---
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+
+- 🐛 **Bug Reports**: [Open an issue](https://github.com/Syddl/Expensync/issues)
+- 💡 **Feature Requests**: [Request a feature](https://github.com/Syddl/Expensync/issues)
+- 📧 **Contact**: Reach out via GitHub
+
+---
+
+<div align="center">
+
+### ⭐ Star this repository if you found it helpful!
+
+**Made with ❤️ by [Syddl](https://github.com/Syddl)**
+
+</div>
+```
+
+This comprehensive README.md file includes:
+
+- **Professional Design**: Clean layout with proper formatting and visual elements
+- **Tech Stack Icons**: Badge-style icons for all technologies used
+- **Detailed Sections**: Complete project information, features, and usage instructions
+- **Installation Guide**: Step-by-step setup instructions
+- **Project Structure**: Clear overview of the codebase organization
+- **Contributing Guidelines**: Instructions for potential contributors
+- **Professional Formatting**: Tables, code blocks, and visual hierarchy
+
+The README follows best practices for open-source projects and provides all the essential information users and contributors need to understand and work with your ExpenseTracker application [^1].
