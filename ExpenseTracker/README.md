@@ -26,7 +26,6 @@
 - [Usage](#-usage)
 - [Project Structure](#-project-structure)
 - [Contributing](#-contributing)
-- [License](#-license)
 
 ---
 
@@ -80,6 +79,13 @@
 | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) | Programming Language | ES6+ |
 | ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white) | Styling & UI Framework | ^3.0.0 |
 | ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) | Markup | HTML5 |
+
+### Backend & Services
+| Technology | Purpose |
+|------------|---------|
+| ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black) | Database & Authentication |
+| ![Firestore](https://img.shields.io/badge/Firestore-FFCA28?style=flat&logo=firebase&logoColor=black) | NoSQL Database |
+| ![Firebase Auth](https://img.shields.io/badge/Firebase_Auth-FFCA28?style=flat&logo=firebase&logoColor=black) | User Authentication |
 
 ### Build Tools & Development
 | Technology | Purpose |
@@ -259,17 +265,6 @@ We welcome contributions to ExpenseTracker! Here's how you can help:
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **React Team** - For the amazing React framework
-- **Vite Team** - For the lightning-fast build tool
-- **Vercel** - For seamless deployment platform
 - **Open Source Community** - For inspiration and resources
 
 ---
